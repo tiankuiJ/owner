@@ -66,7 +66,7 @@ public class AESUtil {
 
 	public static void main(String[] args) throws Exception {
 		System.out.println(AESUtil.getInstance().decrypt("YYAwP+m3mlm/wIYQ3slpfw=="));
-//		System.out.println(AESUtil.getInstance().encrypt("123455"));
+		System.out.println(AESUtil.getInstance().encrypt("123455"));
 //		String a = "http://localhost:8080/files/EC3DFDCB4E361.jpg";
 //		System.out.println(a.lastIndexOf("/")+1);//获取到文件名称);
 //		int i=2;
