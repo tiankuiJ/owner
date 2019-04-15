@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <!-- 引入全部模块 -->
+    <context:component-scan base-package="com.kafei.*"/>
+    <!-- task任务扫描注解 -->
+    <!--<task:annotation-driven/> -->
+    <!-- 加入Aspectj配置 -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <!--<bean id="logAspect" class="com.kf.dj.aop.LogAspect"/> -->
+
+    <bean id="conversionService"
+          class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+        <property name="formatters">
+            <set>
+                <bean class="com.kafei.util.DateFormatter"></bean>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="webBindingInitializer"
+          class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
+        <property name="conversionService" ref="conversionService"></property>
+    </bean>
+
+    <!-- spring 3.1 及之后替代 </mvc:annotation-driven> 的配置方式 -->
+    <bean
+            class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
+    <bean
+            class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="webBindingInitializer" ref="webBindingInitializer"></property>
+        <property name="messageConverters">
+            <list>
+                <ref bean="stringConverter"/>
+                <ref bean="fastjsonConverter"/>
+            </list>
+        </property>
+    </bean>
+    <!-- 解析json请求数据，将json转换为java对象 -->
+    <bean id="fastjsonConverter"
+          class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <!-- 这里顺序不能反，一定先写text/html，不然ie下出现下载提示 -->
+                <value>text/html;charset=UTF-8</value>
+                <value>application/json;charset=UTF-8</value>
+            </list>
+        </property>
+        <property name="features">
+            <array value-type="com.alibaba.fastjson.serializer.SerializerFeature">
+                <!-- 空值继续输出 -->
+                <value>WriteMapNullValue</value>
+                <!-- 防止循环引用 -->
+                <value>DisableCircularReferenceDetect</value>
+                <!-- 格式化日期,默认格式为：yyyy-MM-dd HH:mm:ss -->
+                <value>WriteDateUseDateFormat</value>
+            </array>
+        </property>
+    </bean>
+
+    <!-- 防止循环引用 -->
+    <bean id="DisableCircularReferenceDetect"
+          class="org.springframework.beans.factory.config.FieldRetrievingFactoryBean">
+        <property name="staticField"
+                  value="com.alibaba.fastjson.serializer.SerializerFeature.DisableCircularReferenceDetect"></property>
+    </bean>
+
+    <bean id="stringConverter"
+          class="org.springframework.http.converter.StringHttpMessageConverter">
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/plain;charset=UTF-8</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 配置静态资源，直接映射到对应的文件夹，不被DispatcherServlet处理，3.04新增功能，需要重新设置spring-mvc-3.0.xsd -->
+    <!--<mvc:resources mapping="/imgage/**" location="/resources/images/" /> -->
+    <!--<mvc:resources mapping="/js/**" location="/resources/js/" /> -->
+    <!--<mvc:resources mapping="/css/**" location="/resources/css/" /> -->
+    <!--<mvc:resources mapping="/fonts/**" location="/resources/fonts/" /> -->
+
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix">
+            <value>/WEB-INF/views/</value>
+        </property>
+        <property name="suffix">
+            <value>.jsp</value>
+        </property>
+    </bean>
+    <mvc:annotation-driven/>
+
+    <!--<mvc:interceptors>-->
+    <!--<bean class="com.kafei.module.base.ControllerInterceptor">-->
+    <!--<property name="allowUrls">-->
+    <!--<list>-->
+    <!--<value>/appLogin/login.xhtml</value>-->
+    <!--<value>/appLogin/regCode.xhtml</value>-->
+    <!--<value>/appLogin/reg.xhtml</value>-->
+    <!--<value>/appLogin/rePswCode.xhtml</value>-->
+    <!--<value>/appLogin/checkRePswCode.xhtml</value>-->
+    <!--<value>/appLogin/rePassWord.xhtml</value>-->
+    <!--&lt;!&ndash;直接访问项目名 &ndash;&gt;-->
+    <!--<value>/</value>-->
+    <!--</list>-->
+    <!--</property>-->
+    <!--</bean>-->
+    <!--</mvc:interceptors>-->
+</beans>

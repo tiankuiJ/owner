@@ -1,0 +1,23 @@
+[{
+	"id":1,
+	"text":"四川省",
+	"children":[{
+		"id":11,
+		"text":"绵阳市",
+		"state":"closed",
+		"children":[{
+			"id":111,
+			"text":"涪城区"
+		},{
+			"id":112,
+			"text":"经开区"
+		},{
+			"id":113,
+			"text":"游仙区",
+			"children":[{
+				"id":114,
+				"text":"松垭镇"
+			}]
+		}]
+	}]
+}]

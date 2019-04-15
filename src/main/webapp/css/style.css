@@ -1,0 +1,567 @@
+/*0list*/
+    /*选项卡刷新*/
+#boxs .mui-fullscreen{
+    top: 180px;
+}
+#boxs .mui-segmented-control.mui-scroll-wrapper .mui-scroll{
+    background: #fff;
+    min-width: 100%;
+}
+    /*正在加载*/
+.mui-pull-bottom-tips {
+    text-align: center;
+    font-size: 15px;
+    line-height: 40px;
+    color: #fff;
+}
+    /*正在加载*/
+    /*选项卡刷新*/
+#list .mui-table-view .img{
+    width: 124px;
+    height: 79px;
+    float: left;
+}
+#list .mui-table-view .mui-media-object{
+    width: 124px;
+    min-height: 79px;
+    line-height: 100%;
+    max-width: 100%;
+    height: auto;
+}
+#list .mui-table-view .mui-media-body{
+    color: #99692c;
+}
+#list .mui-table-view .mui-media-body span{
+    margin-bottom: 16px;
+    display: block;
+}
+#list .mui-table-view-cell p{
+    position: absolute;
+    bottom: 9px;
+    color: #beab93;
+}
+#list .mui-table-view-cell>a:not(.mui-btn){
+    white-space: inherit;
+}
+#list .mui-table-view .mui-media-object.mui-pull-left{
+    margin-right: 15px;
+}
+/*0list*/
+/*1首页*/
+    /*公示公告*/
+#indexList  .swiper-container2 {
+       width: 100%;
+       height: 100%;
+}
+#indexList  .mui-slider .mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active{
+    border-bottom: 2px solid #ff6600;
+}
+.mui-table-view:before,.mui-table-view:after,.mui-table-view-cell:after{
+    background-color:transparent;
+}
+#indexBtn{
+    display: block;
+    color: #fff;
+    height: 36px;
+    line-height: 36px;
+    width: 130px;
+    position: absolute;
+    right: 15px;
+}
+#notice .mui-table-view-cell{
+    padding:11px 15px;
+}
+#notice .title{
+    font-weight: bold;
+    float: left;
+    font-size: 19px;
+    color: #ff6600;
+    padding-left: 10px;
+    border-left: 3px solid #ff6600;
+    margin-left: 15px;
+}
+#notice a{
+    display: block;
+    float: right;
+    margin-right: 15px;
+    margin-top: -10px;
+    color: #fff;
+    height: 36px;
+    line-height: 17px;
+    width: 130px;
+}
+    /*公示公告*/
+    /*列表*/
+.indexList{
+    background: #ff9900;
+    padding: 10px 0;
+}
+#indexList .mui-slider-indicator.mui-segmented-control{
+    background: #fff;
+}
+#indexList .mui-slider{
+    background: #ff9900;
+}
+.indexList .mui-table-view-cell{
+    padding: 10px 0;
+    position: relative;
+}
+.indexList .mui-table-cell{
+    display: block;
+    float: left;
+}
+.indexList .mui-table-view-cell.mui-active{
+    background: none;
+}
+.indexList .mui-col-xs-3{
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background: #ffc000;
+    width: 10%;
+    margin-right: 2%;
+}
+.indexList .mui-col-xs-3 .mui-h5 {
+    color: #fff5de;
+    font-size: 20px;
+    text-align: center;
+    padding-right: 5px;
+}
+.indexList .mui-col-xs-3 .num{
+    font-size: 30px;
+    margin-top: 30px;
+}
+.indexList .mui-col-xs-9{
+    background: #fffcf4;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    padding: 15px 15px 15px 20px;
+    width: 88%;
+}
+.indexList .mui-col-xs-9 h4{
+    color: #99692c;
+}
+.indexList .mui-col-xs-9 .list{
+    margin-top: 10px;
+}
+.indexList .mui-col-xs-9 h5{
+    color: #765121;
+    margin-bottom: 0;
+}
+.indexList .mui-col-xs-9 h5 img{
+    margin-right: 5px;
+}
+.indexList .mui-col-xs-9 p{
+    color: #beab93;
+    margin-left: 18px;
+}
+.indexList .mui-col-xs-9 .btn{
+    display: block;
+    line-height: 38px;
+    width: 130px;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+.indexList .style{
+    background: url("../img/style.png") repeat-y;
+    width: 42px;
+    position: absolute;
+    left: 4.5%;
+    top: 17px;
+}
+    /*列表*/
+/*1首页*/
+/*2详情*/
+#info h4,#login h4,#opinion h4,#decide h4,#apply h4{
+    text-align: center;
+    color: #ff9800;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+#info p ,#opinion .p_,#decide .p_,#apply .p_{
+    color: #333;
+    margin-bottom: 10px;
+}
+#info #content{
+    margin-top: 10px;
+}
+/*2详情*/
+/*3登录*/
+#login{
+    padding: 0 30px;
+    background: #fffcf4;
+}
+#login input[type=number],input[type=text]{
+    border: 1px solid #ffbc39;
+    background: transparent;
+    color: #beab93;
+}
+#login input[type=number]::-webkit-input-placeholder,input[type=text]::-webkit-input-placeholder,textarea::-webkit-input-placeholder{
+    color: #beab93;
+}
+#login input[type=number]:-moz-placeholder,input[type=text]:-moz-placeholder,textarea:-moz-placeholder{
+    color: #beab93;
+}
+#login input[type=number]::-moz-placeholder,input[type=text]::-moz-placeholder,textarea::-moz-placeholder{
+    color: #beab93;
+}
+#login input[type=number]:-ms-input-placeholder,input[type=text]:-ms-input-placeholder,textarea:-ms-input-placeholder{
+    color: #beab93;
+}
+#login h4{
+    margin-bottom: 18px;
+    margin-top: 10px;
+}
+#login .mui-numbox-input{
+    position: relative;
+}
+#login .idCard input[type=text]{
+    padding: 10px 50px 10px 15px;
+}
+#login .idCard img{
+    position: absolute;
+    right: 10px;
+    top: 8px;
+    height: 24px;
+    display: none;
+}
+#login .code{
+    width: 100px;
+    background: #ff6600;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 5px;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+}
+#login .code a{
+    color: #fff;
+    display: block;
+}
+#login .btns{
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+#login .btn{
+    display: block;
+    line-height: 38px;
+    width: 100%;
+}
+/*3登录*/
+/*4报名*/
+    /*说明*/
+.explain{
+    position: relative;
+}
+.explain .votes{
+    color: #583614;
+    font-size: 12px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+.explain p{
+    height: 21px;
+}
+    /*说明*/
+.bg{
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top:0;
+    z-index: 2;
+}
+#del{
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    height: 25px;
+}
+.apply {
+    background: #fffcf4;
+    margin: 22% 5% 0;
+    width: 90%;
+    height:60%;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    z-index: 3;
+    padding: 25px 15px;
+    border-radius: 5px;
+}
+.applyBox{
+    overflow: scroll;
+    height: 100%;
+    padding-bottom: 40px;
+}
+.apply h4{
+    text-align: center;
+    color: #ff9800;
+    margin-bottom: 20px;
+    font-size: 20px;
+    margin-top: 0;
+}
+    /*textarea*/
+.apply textarea{
+    color: #beab93;
+    border: none;
+    background-color: transparent;
+    margin-bottom: 0;
+}
+    /*textarea*/
+    /*添加图片*/
+.news_clickImg {
+    margin-left: 15px;
+    padding: 12px 10px;
+    border: 1px solid #d9d9d9;
+    width: 20%;
+    text-align: center;
+}
+.news_clickImg img {
+    width: 70%;
+}
+.don_imgs {
+    overflow: hidden;
+    width: 100%;
+    padding: 5px 15px;
+}
+
+.don_imgs li {
+    float: left;
+    width: 24%;
+    height: 55px;
+    border: 1px solid #F0F0F0;
+    margin-bottom: 5px;
+    margin-right: 1%;
+}
+.don_imgs li img {
+    width: 100%;
+}
+    /*添加图片*/
+    /*点击图片*/
+.don_title {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 9999;
+    height: 44px;
+    text-align: center;
+    line-height: 44px;
+    color: #fff;
+}
+.head_back{
+    background: url(../img/back.png)no-repeat center;
+    height: 44px;
+    width: 15px;
+    background-size: 15px 25px;
+    position: absolute;
+    top:0;
+    left: 15px;
+}
+.del_ {
+    background: url(../img/delete.png)no-repeat;
+    background-size: 20px 20px;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 11px;
+    right: 15px;
+    display: block;
+}
+.loop_9 {
+    width: 100%;
+    height: 100%;
+    position: fixed ;
+    z-index: 9990;
+    top:0;
+}
+.loop_9 .swiper-slide {
+    background-color: #000000;
+}
+.loop_9 .swiper-slide img {
+    width: 100%;
+}
+    /*点击图片*/
+    /*遮罩*/
+.news_mark{
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    z-index: 9991;
+    display: none;
+}
+    /*遮罩*/
+    /*提交*/
+.btns{
+    margin: 20px 0 10px;
+}
+    /*提交*/
+/*4报名*/
+/*5活动表决*/
+#decide .choose{
+    justify-content: space-between;
+    display: flex;
+    margin-bottom: 15px;
+}
+    /*表决成功*/
+.success{
+    width: 100%;
+    padding: 0 5%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 2;
+    background-color: #000000;
+    display: none;
+}
+.success .main{
+    width: 100%;
+    position: relative;
+    top: 30%;
+    background: #fffcf4;
+    border-radius: 5px;
+}
+.success img{
+    width: 100%;
+    position: relative;
+    top: -90px;
+}
+.success .btns{
+    bottom: 20px;
+    position: absolute;
+}
+    /*表决成功*/
+/*5活动表决*/
+/*7提出意见*/
+#opinion,#decide,#apply{
+    background: #fffcf4;
+}
+#opinion .apply,#decide .apply,#apply .apply{
+    background: transparent;
+    margin: 0;
+    width: 100%;
+    overflow: hidden;
+    position: static;
+    top: 0;
+    z-index: 3;
+    padding: 0;
+    border-radius: 0;
+}
+#opinion .applyBox,#decide .applyBox,#apply .applyBox{
+    border: 1px solid #ccc;
+    padding-bottom: 0;
+}
+#opinion .apply textarea::-webkit-input-placeholder,#decide .apply textarea::-webkit-input-placeholder,#apply .apply textarea::-webkit-input-placeholder{
+    color: #ccc;
+}
+#opinion .apply textarea:-moz-placeholder,#decide .apply textarea:-moz-placeholder,#apply .apply textarea:-moz-placeholder{
+    color: #ccc;
+}
+#opinion .apply textarea::-moz-placeholder,#decide .apply textarea::-moz-placeholder,#apply .apply textarea::-moz-placeholder{
+    color: #ccc;
+}
+#opinion .apply textarea:-ms-input-placeholder,#decide .apply textarea:-ms-input-placeholder,#apply .apply textarea:-ms-input-placeholder{
+    color: #ccc;
+}
+#opinion .btns,#decide .btns,#apply .btns{
+    margin: 20px 0 10px;
+}
+/*7提出意见*/
+/*8投票*/
+#vote{
+    padding-bottom: 50px;
+}
+#notice h4{
+    text-align: center;
+    color: #ff9800;
+    font-size: 20px;
+}
+#notice p{
+    text-align: center;
+    color: #8d7b6d;
+}
+#notice p span{
+    color: #ff5a00;
+}
+#notice .mui-table-view-cell.mui-active{
+    background: none;
+}
+#notice .votes{
+    color: #583614;
+    font-size: 12px;
+    position: absolute;
+    bottom: 11px;
+    right: 15px;
+}
+#vote .mui-table-view .mui-media-body{
+    color: #583614;
+}
+#vote .mui-table-view,#list .mui-table-view {
+    background: #ff9900;
+}
+#vote .mui-table-view .img{
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    float: left;
+    margin-right: 10px;
+}
+#vote .mui-table-view .mui-media-object.mui-pull-left{
+    margin-right:0;
+}
+#vote .mui-table-view .mui-media-object{
+    width: 42px;
+    min-height: 42px;
+    line-height: 100%;
+    max-width: 100%;
+    height: auto;
+}
+#vote .mui-table-view-cell,#list .mui-table-view-cell{
+    background: #fff;
+    margin: 15px 10px 15px;
+    position: relative;
+    border-radius: 5px;
+    padding: 16px 15px;
+}
+#vote .mui-table-view-cell span{
+    color: #ff6600;
+    font-size: 17px;
+}
+#vote .rank{
+    background: url("../img/rank.png");
+    position: absolute;
+    top: -1px;
+    right: 15px;
+    color: #fff;
+    padding: 5px 10px;
+}
+#vote .choose{
+    justify-content: space-between;
+    display: flex;
+    margin-top: 10px;
+}
+#vote .choose input,#decide .choose input{
+    display: none;
+}
+#vote .choose label,#decide .choose label{
+    width: 30%;
+}
+#vote .choose .btn,#decide .choose .btn{
+    width: 100%;
+    display: block;
+    float: left;
+    line-height: 26px;
+    border: 1px solid #f2daa2;
+    color: #ff6600;
+    background: transparent;
+}
+.back{
+    border: 1px solid transparent!important;
+    color: #fff!important;
+    background: #ff5a00!important;
+}
+/*8投票*/

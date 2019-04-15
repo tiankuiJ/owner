@@ -1,0 +1,67 @@
+<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/js/uploader/css/uploader.css"/>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/uploader/js/uploader.js"></script>
+<script type="text/javascript">
+    $("#image3").click(function () {
+        $("#image_file").val("");
+        $("#image_file").click();
+    });
+
+    $("#image4").click(function () {
+        $("#image_file2").val("");
+        $("#image_file2").click();
+    });
+
+    $("#delVideo").click(function () {
+        $(this).hide();
+        $("#video").hide();
+        $("#url3").val("");
+        $("#list2").hide();
+    });
+
+    function showVideo(e) {
+        var url = $(e).val();
+        if(url != '' && url != undefined){
+            $("#video").attr('src',url);
+            $("#video").show();
+            $("#delVideo").show();
+        }else{
+            $("#video").hide();
+            $("#delVideo").hide();
+        }
+    }
+
+    function delVideo(e) {
+        $(e).hide();
+        $("#video").hide();
+        $("#url3").val("");
+        $("#list2").hide();
+    }
+
+
+
+    function initUploadList() {
+        $(".upload_list_ li a").each(function() {
+            $(this).click(function() {
+                $(this).parent().remove();
+                var html = $("#imgsDiv").html().trim();
+                if(html == ''){
+                    $("#delPic").hide();
+                }
+            });
+        });
+
+        $(".upload_list_ li textarea").each(function() {
+            $(this).on("input propertychange", function() {
+                var numId = this.getAttribute("numId");
+                if($(this).val().length > 255) {
+                    $(this).val($(this).val().substring(0, 255));
+                } else {
+                    $("#load_Number" + numId).html($(this).val().length + "/255");
+                }
+            });
+        });
+    }
+
+    initUploadList();
+</script>
+

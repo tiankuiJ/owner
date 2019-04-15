@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>社区活动</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" href="css/swiper.min.css">
+		<link rel="stylesheet" type="text/css" href="css/common.css">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<style>
+			html,
+			body {
+				background: #ff9900;
+			}
+			
+			.mui-content {
+				background: #fff;
+			}
+			
+			.mui-slider .mui-slider-group {
+				white-space: inherit;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<!--轮播-->
+			<div class="swiper-container swiper-container1" id="lb">
+				<div class="swiper-wrapper" id="banner"></div>
+				<div class="swiper-pagination"></div>
+			</div>
+			<!--轮播-->
+			<!--列表-->
+			<div id="indexList">
+				<div id="slider" class="mui-slider">
+					<div id="sliderSegmentedControl" class="mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+						<a class="mui-control-item mui-active" href="javascript:void(this);" id="left">
+							公示公告
+						</a>
+						<a class="mui-control-item" href="javascript:void(this);" id="right">
+							我要参与
+						</a>
+					</div>
+					<div class="mui-slider-group ">
+						<div class="swiper-container swiper-container2">
+							<div class="swiper-wrapper">
+								<div class="swiper-slide swiper-no-swiping">
+									<ul class="mui-table-view mui-table-view-striped mui-table-view-condensed indexList " id="gglb">
+									</ul>
+								</div>
+								<div class="swiper-slide swiper-no-swiping">
+									<ul class="mui-table-view mui-table-view-striped mui-table-view-condensed indexList" id="kcy">
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--列表-->
+		</div>
+		<!--轮播-->
+		<script id='bnr' type="text/html">
+			<%for(var i=0;i < rows.length;i++){%>
+			<div class="swiper-slide">
+				<%if(rows[i].url != "" && rows[i].url != undefined){%>
+				<a href="<%=rows[i].url%>" class="img"><img src="<%=rows[i].img%>" /></a>
+				<%}else{%>
+				<a href="javascript:void(0);;" class="img"><img src="<%=rows[i].img%>" /></a>
+				<%}%>
+			</div>
+			<%}%>
+		</script>
+		<!--轮播-->
+		<!--列表-->
+		<script id='lists' type="text/html">
+			<%for(var i=0;i < data.length;i++){%>
+			<li class="mui-table-view-cell">
+				<div class="mui-table">
+					<div class="mui-table-cell mui-col-xs-3 mui-text-left">
+					</div>
+					<div class="mui-table-cell mui-col-xs-9">
+						<h4 class="mui-ellipsis"><%=data[i].stage.name%></h4>
+						<%for(var j=0;j < data[i].infoList.length;j++){%>
+						<div class="list">
+							<%if(data[i].infoList[j].op=="报名") { %>
+							<a href="menu/info.html?id=<%=data[i].infoList[j].id%>&state=0">
+								<h5><img src="img/circle.png"/><%=data[i].infoList[j].title%></h5>
+							</a>
+							<%}else if(data[i].infoList[j].op=="表决"){%>
+							<a href="menu/info.html?id=<%=data[i].infoList[j].id%>&state=1">
+								<h5><img src="img/circle.png"/><%=data[i].infoList[j].title%></h5>
+							</a>
+							<%}else if(data[i].infoList[j].op=="意见"){%>
+							<a href="menu/info.html?id=<%=data[i].infoList[j].id%>&state=2">
+								<h5><img src="img/circle.png"/><%=data[i].infoList[j].title%></h5>
+							</a>
+							<%}else if(data[i].infoList[j].op=="投票"){%>
+							<a href="menu/info.html?id=<%=data[i].infoList[j].id%>&state=3">
+								<h5><img src="img/circle.png"/><%=data[i].infoList[j].title%></h5>
+							</a>
+							<%}else{%>
+							<a href="menu/info.html?id=<%=data[i].infoList[j].id%>">
+								<h5><img src="img/circle.png"/><%=data[i].infoList[j].title%></h5>
+							</a>
+							<%}%>
+							<p class="mui-h6 mui-ellipsis">
+								<%=data[i].infoList[j].createTime%>
+							</p>
+							<%if(data[i].infoList[j].op=="报名") { %>
+							<a src="menu/apply.html?id=<%=data[i].infoList[j].oid%>" class="btn">我要报名</a>
+							<%}else if(data[i].infoList[j].op=="表决"){%>
+							<a src="menu/decideTwo.html?id=<%=data[i].infoList[j].id%>" class="btn">我要表决</a>
+							<%}else if(data[i].infoList[j].op=="意见"){%>
+							<a src="menu/opinion.html?id=<%=data[i].infoList[j].oid%>" class="btn">我要提建议</a>
+							<%}else if(data[i].infoList[j].op=="投票"){%>
+							<a src="menu/vote.html?id=<%=data[i].infoList[j].oid%>" class="btn">我要投票</a>
+							<%}%>
+						</div>
+						<%}%>
+					</div>
+				</div>
+				<div class="style"></div>
+			</li>
+			<%}%>
+		</script>
+		<!--列表-->
+		<!--<script src="js/mui.min.js"></script>-->
+
+		<script src="js/jquery-1.10.2.min.js"></script>
+		<script src="js/swiper.min.js"></script>
+		<script src="js/baiduTemplate.js"></script>
+		<script src="js/common.js"></script>
+		<script language="javascript">
+			var id = getQueryString("id");
+
+			//title
+			$.get(localStorage.ROOTPATH + "activityList.xhtml", {
+				"orgId": orgId
+			}, function(data) {
+				for(var i = 0; i < data.rows.length; i++) {
+					if(data.rows[i].id == id) {
+						$("title").html(data.rows[i].title);
+					}
+				}
+			}, "json");
+			//title
+
+			//左右
+			var swiper = new Swiper('.swiper-container2', {
+				autoHeight: true,
+				noSwiping: true
+			});
+			$(".mui-control-item").on("click", function() {
+				var id = this.id;
+				$(".mui-active").each(function() {
+					$(this).removeClass("mui-active");
+				});
+				if(id == "left") {
+					swiper.slideTo(0, 300);
+					$(this).addClass("mui-active");
+				} else {
+					swiper.slideTo(1, 300);
+					$(this).addClass("mui-active");
+				}
+			});
+			//左右
+
+			//可参与的公告列表
+			$.get(localStorage.ROOTPATH + "opInfoList.xhtml", {
+				"activityId": id
+			}, function(data) {
+				if(data.data.length == 0) {
+					$("#right").hide();
+					$("#left").css({
+						width: "50%",
+						display: "block"
+					});
+				} else {
+					$("#indexBtn").hide();
+					//渲染页面
+					var html = bt('lists', data);
+					$("#kcy").append(html);
+					//渲染页面
+					indexStyle();
+				}
+			}, "json");
+			//可参与的公告列表
+
+			//公告列表
+			$.get(localStorage.ROOTPATH + "infoList.xhtml", {
+				"activityId": id
+			}, function(data) {
+				//渲染页面
+				var html = bt('lists', data);
+				$("#gglb").append(html);
+				//渲染页面
+				indexStyle();
+			}, "json");
+			//公告列表
+
+			function indexStyle() {
+				//样式
+				$("#indexList li").each(function() {
+					// padding
+					$(this).find(".mui-col-xs-3").css("padding-top", ($(this).height() - 87) / 2);
+					var paddingTop = ($(this).height() - 87) / 2;
+					//左边
+					$(this).find(".mui-col-xs-3").height($(this).height() - paddingTop);
+					//style.png
+					$(this).find(".style").height($(this).height() - 13);
+				});
+				//颜色块
+				$("#indexList").find("#gglb .mui-col-xs-3:odd").css("background-color", "#ff7e00");
+				$("#indexList").find("#kcy .mui-col-xs-3:odd").css("background-color", "#ff7e00");
+				//样式
+
+				//左右切换
+				swiper = new Swiper('.swiper-container2', {
+					autoHeight: true,
+					noSwiping: true
+				});
+				//左右切换
+
+				//点击到详情
+				$("ul a").on("click", function() {
+					if(!localStorage.phone) {
+						window.location.href = "menu/login.html";
+					} else {
+						window.location.href = $(this).attr("src");
+					}
+				});
+				//点击到详情
+			}
+		</script>
+	</body>
+
+</html>

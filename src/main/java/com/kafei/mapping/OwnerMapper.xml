@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kafei.mapper.OwnerMapper">
+    <resultMap id="BaseResultMap" type="com.kafei.vo.Owner">
+        <id column="phone" property="phone" jdbcType="BIGINT"/>
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="psd" property="psd" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="VARCHAR"/>
+        <result column="birth" property="birth" jdbcType="VARCHAR"/>
+        <result column="job" property="job" jdbcType="VARCHAR"/>
+        <result column="whcd" property="whcd" jdbcType="VARCHAR"/>
+        <result column="zzmm" property="zzmm" jdbcType="VARCHAR"/>
+        <result column="phonet" property="phonet" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="position" property="position" jdbcType="VARCHAR"/>
+        <result column="acreage" property="acreage" jdbcType="DOUBLE"/>
+        <result column="org_id" property="orgId" jdbcType="INTEGER"/>
+        <result column="deleted" property="deleted" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        phone, id, name, sex, birth, job, whcd, zzmm, position, acreage, org_id, create_time,psd,phonet,remark,deleted
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from o_owner
+        where phone = #{phone,jdbcType=BIGINT}
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from o_owner
+        where id=#{id}
+    </select>
+
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        DELETE FROM o_owner
+        WHERE phone = #{phone,jdbcType=BIGINT}
+    </delete>
+    <insert id="insertSelective" parameterType="com.kafei.vo.Owner">
+        insert into o_owner
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="birth != null">
+                birth,
+            </if>
+            <if test="job != null">
+                job,
+            </if>
+            <if test="whcd != null">
+                whcd,
+            </if>
+            <if test="zzmm != null">
+                zzmm,
+            </if>
+            <if test="position != null">
+                position,
+            </if>
+            <if test="acreage != null">
+                acreage,
+            </if>
+            <if test="orgId != null">
+                org_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="psd != null">
+                psd,
+            </if>
+            <if test="phonet != null" >
+                phonet,
+            </if>
+            <if test="remark != null" >
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="phone != null">
+                #{phone,jdbcType=BIGINT},
+            </if>
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=VARCHAR},
+            </if>
+            <if test="birth != null">
+                #{birth,jdbcType=VARCHAR},
+            </if>
+            <if test="job != null">
+                #{job,jdbcType=VARCHAR},
+            </if>
+            <if test="whcd != null">
+                #{whcd,jdbcType=VARCHAR},
+            </if>
+            <if test="zzmm != null">
+                #{zzmm,jdbcType=VARCHAR},
+            </if>
+            <if test="position != null">
+                #{position,jdbcType=VARCHAR},
+            </if>
+            <if test="acreage != null">
+                #{acreage,jdbcType=DOUBLE},
+            </if>
+            <if test="orgId != null">
+                #{orgId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="psd != null">
+                #{psd},
+            </if>
+            <if test="phonet != null" >
+                #{phonet,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.kafei.vo.Owner">
+        <if test="oldPhone==null">
+            update o_owner
+            <set>
+                <if test="id != null">
+                    id = #{id,jdbcType=INTEGER},
+                </if>
+                <if test="name != null">
+                    name = #{name,jdbcType=VARCHAR},
+                </if>
+                <if test="sex != null">
+                    sex = #{sex,jdbcType=VARCHAR},
+                </if>
+                <if test="birth != null">
+                    birth = #{birth,jdbcType=VARCHAR},
+                </if>
+                <if test="job != null">
+                    job = #{job,jdbcType=VARCHAR},
+                </if>
+                <if test="whcd != null">
+                    whcd = #{whcd,jdbcType=VARCHAR},
+                </if>
+                <if test="zzmm != null">
+                    zzmm = #{zzmm,jdbcType=VARCHAR},
+                </if>
+                <if test="position != null">
+                    position = #{position,jdbcType=VARCHAR},
+                </if>
+                <if test="acreage != null">
+                    acreage = #{acreage,jdbcType=DOUBLE},
+                </if>
+                <if test="orgId != null">
+                    org_id = #{orgId,jdbcType=INTEGER},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="psd != null">
+                    psd=#{psd},
+                </if>
+                <if test="phonet != null" >
+                    phonet = #{phonet,jdbcType=VARCHAR},
+                </if>
+                <if test="remark != null" >
+                    remark = #{remark,jdbcType=VARCHAR},
+                </if>
+                <if test="deleted != null" >
+                    deleted = #{deleted},
+                </if>
+            </set>
+            where phone = #{phone,jdbcType=BIGINT}
+        </if>
+        <if test="oldPhone!=null">
+            update o_owner
+            <set>
+                <if test="id != null">
+                    id = #{id,jdbcType=INTEGER},
+                </if>
+                <if test="name != null">
+                    name = #{name,jdbcType=VARCHAR},
+                </if>
+                <if test="sex != null">
+                    sex = #{sex,jdbcType=VARCHAR},
+                </if>
+                <if test="birth != null">
+                    birth = #{birth,jdbcType=VARCHAR},
+                </if>
+                <if test="job != null">
+                    job = #{job,jdbcType=VARCHAR},
+                </if>
+                <if test="whcd != null">
+                    whcd = #{whcd,jdbcType=VARCHAR},
+                </if>
+                <if test="zzmm != null">
+                    zzmm = #{zzmm,jdbcType=VARCHAR},
+                </if>
+                <if test="position != null">
+                    position = #{position,jdbcType=VARCHAR},
+                </if>
+                <if test="acreage != null">
+                    acreage = #{acreage,jdbcType=DOUBLE},
+                </if>
+                <if test="orgId != null">
+                    org_id = #{orgId,jdbcType=INTEGER},
+                </if>
+                <if test="createTime != null">
+                    create_time = #{createTime,jdbcType=TIMESTAMP},
+                </if>
+                <if test="psd != null">
+                    psd=#{psd},
+                </if>
+                <if test="phone != null">
+                    phone=#{phone},
+                </if>
+                <if test="phonet != null" >
+                    phonet = #{phonet,jdbcType=VARCHAR},
+                </if>
+                <if test="remark != null" >
+                    remark = #{remark,jdbcType=VARCHAR},
+                </if>
+                <if test="deleted != null" >
+                    deleted = #{deleted},
+                </if>
+            </set>
+            where phone = #{oldPhone,jdbcType=BIGINT}
+        </if>
+
+    </update>
+
+    <select id="selectList" parameterType="owner" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from o_owner
+        <where>
+            deleted!=1
+            <if test="orgId!=null">
+                and org_id=#{orgId}
+            </if>
+            <if test="phone!=null">
+                and phone=#{phone}
+            </if>
+            <if test="psd!=null">
+                and psd=#{psd}
+            </if>
+            <if test="childOrg!=null">
+                and org_id in 
+                <foreach collection="childOrg" item="o" open="(" separator="," close=")">
+                    ${o.id}
+                </foreach>
+            </if>
+            <if test="searchStr!=null">
+                and concat(name, phone,position) like concat('%',#{searchStr},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="webLogin" parameterType="owner" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from o_owner where phone=#{phone} and psd=#{psd} AND deleted!=1
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        <foreach collection="list" separator=";" item="o">
+            INSERT INTO o_owner(name,sex,psd,phone,job,birth,whcd,zzmm,position,acreage,org_id,phonet,remark) VALUES
+            (#{o.name},#{o.sex},#{o.psd},#{o.phone},#{o.job},#{o.birth},#{o.whcd},#{o.zzmm},#{o.position},#{o.acreage},#{o.orgId},#{o.phonet},#{o.remark})
+        </foreach>
+    </insert>
+
+    <select id="selectSumByOrgId" parameterType="java.lang.Integer" resultType="java.lang.Double">
+        SELECT
+            sum(a.acreage)
+        FROM
+            o_owner a,
+            o_org b
+        WHERE
+            a.org_id = b.id
+            AND (b.id = #{id} OR b.p_id = #{id})
+    </select>
+</mapper>

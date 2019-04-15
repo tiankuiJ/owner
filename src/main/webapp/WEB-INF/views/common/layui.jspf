@@ -1,0 +1,23 @@
+
+<%--<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/js/layui/css/layui.css"/>--%>
+<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/layui/layui.js"></script>
+
+<script type="text/javascript">
+
+    //初始化日期选择框
+    function initDateTimeInput(id) {
+        layui.use('laydate', function() {
+            var laydate = layui.laydate;
+
+            var start = {elem: this, istime: false, istoday : true, format: 'YYYY-MM-DD'};
+            try {
+                document.getElementById(id).onclick = function() {
+                    start.elem = this
+                    laydate(start);
+                }
+            }catch (err){
+
+            }
+        });
+    }
+</script>

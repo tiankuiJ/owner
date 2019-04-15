@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kafei.mapper.VoteMapper">
+    <resultMap id="BaseResultMap" type="com.kafei.vo.Vote">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="info_id" property="infoId" jdbcType="INTEGER"/>
+        <result column="max_user_vote" property="maxUserVote" jdbcType="INTEGER"/>
+        <result column="show_num" property="showNum" jdbcType="VARCHAR"/>
+        <result column="show_rank" property="showRank" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="LONGVARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="org_id" property="orgId" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="start_time" property="startTime" jdbcType="DATE"/>
+        <result column="end_time" property="endTime" jdbcType="DATE"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, title, info_id, max_user_vote, show_num, show_rank, status, org_id, create_time,start_time, end_time,content
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from o_vote
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        update o_vote set status='已删除' where id=#{id}
+    </update>
+    <insert id="insertSelective" parameterType="com.kafei.vo.Vote" useGeneratedKeys="true" keyProperty="id">
+        insert into o_vote
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="infoId != null">
+                info_id,
+            </if>
+            <if test="maxUserVote != null">
+                max_user_vote,
+            </if>
+            <if test="showNum != null">
+                show_num,
+            </if>
+            <if test="showRank != null">
+                show_rank,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="orgId != null">
+                org_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="infoId != null">
+                #{infoId,jdbcType=INTEGER},
+            </if>
+            <if test="maxUserVote != null">
+                #{maxUserVote,jdbcType=INTEGER},
+            </if>
+            <if test="showNum != null">
+                #{showNum,jdbcType=VARCHAR},
+            </if>
+            <if test="showRank != null">
+                #{showRank,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="orgId != null">
+                #{orgId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="startTime != null">
+                #{startTime},
+            </if>
+            <if test="endTime != null">
+                #{endTime},
+            </if>
+            <if test="content != null">
+                #{content},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.kafei.vo.Vote">
+        update o_vote
+        <set>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="infoId != null">
+                info_id = #{infoId,jdbcType=INTEGER},
+            </if>
+            <if test="maxUserVote != null">
+                max_user_vote = #{maxUserVote,jdbcType=INTEGER},
+            </if>
+            <if test="showNum != null">
+                show_num = #{showNum,jdbcType=VARCHAR},
+            </if>
+            <if test="showRank != null">
+                show_rank = #{showRank,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="orgId != null">
+                org_id = #{orgId,jdbcType=INTEGER},
+            </if>
+            <if test="infoId != null">
+                info_id = #{infoId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="startTime != null">
+                start_time=#{startTime},
+            </if>
+            <if test="endTime != null">
+                end_time=#{endTime},
+            </if>
+            <if test="content != null">
+                content=#{content},
+            </if>
+            <if test="qrCode != null">
+                qrCode=#{qrCode},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectList" parameterType="vote" resultType="vote">
+        SELECT
+        a.id,
+        a.title,
+        a.info_id AS infoId,
+        c.title AS infoName,
+        a.max_user_vote AS maxUserVote,
+        a.show_num AS showNum,
+        a.show_rank AS showRank,
+        a.status,
+        a.org_id AS orgId,
+        a.create_time AS createTime,
+        b.name AS orgName,
+        a.qrCode
+        from o_vote a LEFT JOIN o_org b ON a.org_id=b.id LEFT JOIN o_info c ON a.info_id=c.id
+        <where>
+             a.status!='已删除'
+            <if test="childOrg==null and orgId!=null">
+                and a.org_id=#{orgId}
+            </if>
+            <if test="childOrg!=null and orgId!=null">
+                and (a.org_id in
+                <foreach collection="childOrg" item="item" open="(" separator="," close=")">
+                    #{item.id}
+                </foreach>
+                or a.org_id=#{orgId}
+                )
+            </if>
+            <if test="searchStr!=null">
+                and concat(a.title) like concat('%',#{searchStr},'%')
+            </if>
+            <if test="infoId!=null">
+                and a.info_id is null
+            </if>
+            <!--<if test="startTime!=null">-->
+                <!--<![CDATA[-->
+              <!--and  a.start_time<=DATE_FORMAT(NOW(),"%Y-%m-%d") AND a.end_time>=DATE_FORMAT(NOW(),"%Y-%m-%d")-->
+               <!--]]>-->
+            <!--</if>-->
+        </where>
+        ORDER BY a.create_time DESC
+    </select>
+
+    <select id="selectByInfoId" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        SELECT id
+        FROM o_vote
+        WHERE info_id = #{infoId}
+    </select>
+
+</mapper>

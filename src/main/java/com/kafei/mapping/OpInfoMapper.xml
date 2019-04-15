@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kafei.mapper.OpInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.kafei.vo.OpInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="video" property="video" jdbcType="VARCHAR" />
+    <result column="org_id" property="orgId" jdbcType="INTEGER" />
+    <result column="view_num" property="viewNum" jdbcType="INTEGER" />
+    <result column="start_time" property="startTime" jdbcType="DATE" />
+    <result column="end_time" property="endTime" jdbcType="DATE" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="info_id" property="infoId" jdbcType="INTEGER" />
+    <result column="desct" property="desct" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.kafei.vo.OpInfo" extends="BaseResultMap" >
+    <result column="content" property="content" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, title, video, org_id, start_time, end_time, create_time, type, info_id,view_num,desct
+  </sql>
+  <sql id="Blob_Column_List" >
+    content
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from o_op_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    update o_op_info SET status='已删除' WHERE  id=#{id}
+  </update>
+  <insert id="insertSelective" parameterType="com.kafei.vo.OpInfo" useGeneratedKeys="true" keyProperty="id">
+    insert into o_op_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="video != null" >
+        video,
+      </if>
+      <if test="orgId != null" >
+        org_id,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="infoId != null" >
+        info_id,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="desct != null" >
+        desct,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="video != null" >
+        #{video,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null" >
+        #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=DATE},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=DATE},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="infoId != null" >
+        #{infoId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="desct != null" >
+        #{desct},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kafei.vo.OpInfo" >
+    update o_op_info
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="video != null" >
+        video = #{video,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null" >
+        org_id = #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=DATE},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=DATE},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="infoId != null" >
+        info_id = #{infoId,jdbcType=INTEGER},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="qrCode != null">
+        qrCode=#{qrCode},
+      </if>
+      <if test="desct != null" >
+        desct=#{desct},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectList" parameterType="opInfo" resultType="opInfo">
+    SELECT
+      a.id,
+      a.title,
+    a.type,
+    a.view_num AS viewNum,
+      a.info_id AS infoId,
+      c.title AS infoName,
+      a.org_id AS orgId,
+    a.qrCode,
+      a.create_time AS createTime,
+      b.name AS orgName
+    from o_op_info a LEFT JOIN o_org b ON a.org_id=b.id LEFT JOIN o_info c ON a.info_id=c.id
+    <where>
+      a.status!='已删除'
+      <if test="childOrg==null and orgId!=null">
+        and a.org_id=#{orgId}
+      </if>
+      <if test="childOrg!=null and orgId!=null">
+        and (a.org_id in
+        <foreach collection="childOrg" item="item" open="(" separator="," close=")">
+          #{item.id}
+        </foreach>
+        or a.org_id=#{orgId}
+        )
+      </if>
+      <if test="searchStr!=null">
+        and concat(a.title) like concat('%',#{searchStr},'%')
+      </if>
+      <if test="infoId!=null">
+        and (a.info_id is null or a.info_id = ${infoId})
+      </if>
+      <if test="type!=null">
+        and a.type=#{type}
+      </if>
+      <!--<if test="startTime!=null">-->
+        <!--<![CDATA[-->
+              <!--and  a.start_time<=DATE_FORMAT(NOW(),"%Y-%m-%d") AND a.end_time>=DATE_FORMAT(NOW(),"%Y-%m-%d")-->
+               <!--]]>-->
+      <!--</if>-->
+    </where>
+    ORDER BY a.create_time DESC
+  </select>
+
+
+
+
+
+  <select id="biaoJueList" parameterType="java.lang.Integer" resultType="opInfo">
+    SELECT
+    a.id,
+    a.title,
+    a.type,
+    a.view_num AS viewNum,
+    a.info_id AS infoId,
+    a.org_id AS orgId,
+    a.qrCode,
+    a.create_time AS createTime
+    from o_op_info a
+    <where>
+      a.status!='已删除'
+        and a.info_id = #{infoId}
+    </where>
+    ORDER BY a.create_time DESC
+  </select>
+
+
+
+
+
+
+
+
+
+  <select id="selectByIds" parameterType="java.util.List" resultType="opInfo">
+    SELECT id,title from o_op_info WHERE id in
+    <foreach collection="list" item="id" separator="," open="(" close=")">
+      ${id}
+    </foreach>
+  </select>
+</mapper>

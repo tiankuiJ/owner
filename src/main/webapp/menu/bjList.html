@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<title id="title">表决</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/swiper.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/common.css">
+		<link rel="stylesheet" type="text/css" href="../css/style.css">
+		<style>
+			html,
+			body,
+			.mui-content {
+				background: #ff9900 !important;
+			}
+			
+			.mui-content {
+				background: #fff;
+			}
+			
+			.mui-slider .mui-slider-group {
+				white-space: inherit;
+			}
+			
+			.indexList .style {
+				left: 1%;
+			}
+			
+			.indexList .mui-col-xs-3 {
+				width: 6%;
+			}
+			
+			.indexList .mui-col-xs-9 {
+				width: 92%;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<!--列表-->
+				<div id="indexList">
+					<ul class="mui-table-view mui-table-view-striped mui-table-view-condensed indexList " id="gglb">
+					</ul>
+				</div>
+				<!--列表-->
+			</div>
+		</div>
+		<!--列表-->
+		<script id='lists' type="text/html">
+			<%for(var i=0;i < data.length;i++){%>
+			<li class="mui-table-view-cell">
+				<div class="mui-table">
+					<div class="mui-table-cell mui-col-xs-3 mui-text-left">
+						<p class="mui-h5 num">
+						</p>
+					</div>
+					<div class="mui-table-cell mui-col-xs-9">
+						<h4 class="mui-ellipsis"><%=data[i].title%></h4>
+						<h5><%=data[i].createTime%></h5>
+						<div class="list">
+							<a src="decide.html?id=<%=data[i].id%>" class="btn">点击进入</a>
+						</div>
+					</div>
+				</div>
+				<div class="style"></div>
+			</li>
+			<%}%>
+		</script>
+		<!--列表-->
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/jquery-1.10.2.min.js"></script>
+		<script src="../js/swiper.min.js"></script>
+		<script src="../js/baiduTemplate.js"></script>
+		<script src="../js/common.js"></script>
+		<script language="javascript">
+			var id = getQueryString("id");
+			mui.init({
+				pullRefresh: {
+					container: '#pullrefresh',
+					up: {
+						auto: true,
+						contentrefresh: '正在加载...',
+						callback: pullupRefresh
+					}
+				}
+			});
+			//title
+			//左右
+			var swiper = new Swiper('.swiper-container2', {
+				autoHeight: true,
+				noSwiping: true
+			});
+			$(".mui-control-item").on("click", function() {
+				var id = this.id;
+				$(".mui-active").each(function() {
+					$(this).removeClass("mui-active");
+				});
+				if(id == "left") {
+					swiper.slideTo(0, 300);
+					$(this).addClass("mui-active");
+				} else {
+					swiper.slideTo(1, 300);
+					$(this).addClass("mui-active");
+				}
+			});
+			//左右
+
+			//可参与的公告列表
+			//可参与的公告列表
+			var page = 1;
+			//公告列表
+			function pullupRefresh() {
+				$.get(localStorage.ROOTPATH + "biaoJueList.xhtml", {
+					"infoId": id,
+					page: page,
+					rows: 10,
+				}, function(data) {
+					//渲染页面
+					page++;
+					var html = bt('lists', data);
+					$("#gglb").append(html);
+					//渲染页面
+					indexStyle();
+					setTimeout(function() {
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(false);
+					}, 1000);
+				}, "json");
+
+			}
+
+			//公告列表
+
+			function indexStyle() {
+				//样式
+				$("#indexList li").each(function() {
+					// padding
+					$(this).find(".mui-col-xs-3").css("padding-top", ($(this).height() - 87) / 2);
+					var paddingTop = ($(this).height() - 87) / 2;
+					//左边
+					$(this).find(".mui-col-xs-3").height($(this).height() - paddingTop);
+					//style.png
+					$(this).find(".style").height($(this).height() - 13);
+				});
+				//颜色块
+				$("#indexList").find("#gglb .mui-col-xs-3:odd").css("background-color", "#ff7e00");
+				$("#indexList").find("#kcy .mui-col-xs-3:odd").css("background-color", "#ff7e00");
+				//样式
+				//点击到详情
+				$("ul a").blur();
+				$("ul a").on("tap", function() {
+					window.location.href = $(this).attr("src");
+				});
+				//点击到详情
+			}
+		</script>
+	</body>
+
+</html>

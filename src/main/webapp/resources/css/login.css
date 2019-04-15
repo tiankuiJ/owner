@@ -1,0 +1,150 @@
+html,
+body {
+	min-width: 1000px;
+	padding: 0;
+	margin: 0;
+}
+
+html {
+	background: url(../images/login_bgi.jpg)no-repeat center center fixed;
+	background-size: 100% auto;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+
+p {
+	display: block;
+	-webkit-margin-before: 0em !important;
+	-webkit-margin-after: 0em !important;
+	-webkit-margin-start: 0px;
+	-webkit-margin-end: 0px;
+}
+
+.login_con {
+	width: 975px;
+	height: 657px;
+	background: url(../images/login_bac.png)no-repeat center center;
+	margin: auto;
+	margin-top: 5%;
+}
+.login_bq{color: white;font-size: 12px;text-align: center;}
+.login_bq a{color: white !important;text-decoration: none;}
+.login_con .login_content {
+	width: 345px;
+	margin: auto;
+	text-align: center;
+}
+
+.login_content .login_icon {
+	margin: auto;
+	margin-top: 60px;
+}
+
+.login_content>p {
+	color: #000000;
+	font-size: 20px;
+	padding-top: 5px;
+	padding-bottom: 3px;
+}
+
+.login_content>span {
+	color: #000000;
+	font-size: 24px;
+	font-weight: 700;
+}
+
+.userName {
+	width: 340px;
+	height: 50px;
+	margin: auto;
+	background-color: white;
+	border-radius: 50px;
+	margin-top: 25px;
+	text-align: left;
+}
+
+.userName img {
+	width: 27px;
+	float: left;
+	margin-top: 9px;
+	margin-left: 25px;
+}
+.login_content input {
+	width: 208px;
+	height: 48px;
+	line-height: 48px;
+	font-size: 18px;
+	border: 0;
+	outline: none;
+	width: 64%;
+	float: left;
+    margin-left: 23px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.passWord {
+	width: 340px;
+	height: 50px;
+	margin: auto;
+	background-color: white;
+	border-radius: 50px;
+	margin-top: 25px;
+	text-align: left;
+}
+
+.passWord img {
+	width: 38px;
+	float: left;
+	margin-top: 15px;
+	margin-left: 24px;
+}
+.passWord input{
+	margin-left: 12px;
+}
+::-webkit-input-placeholder {
+	/* WebKit browsers */
+	color: #b2b2b2;
+}
+
+:-moz-placeholder {
+	/* Mozilla Firefox 4 to 18 */
+	color: #b2b2b2;
+}
+
+::-moz-placeholder {
+	/* Mozilla Firefox 19+ */
+	color: #b2b2b2;
+}
+
+:-ms-input-placeholder {
+	/* Internet Explorer 10+ */
+	color: #b2b2b2;
+}
+.login_btn {
+	max-width: 340px;
+	margin: auto;
+	background-color: #ff8f00;
+	border-radius: 30px;
+	height: 50px;
+	border: 0;
+	outline: medium !important;
+	cursor: pointer;
+	font-size: 20px;
+	color: white;
+	width: 100%;
+	margin-top: 30px;
+}
+.login_btn:hover{
+  background: -webkit-linear-gradient(#ffdc00, #ff9a00); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(#ffdc00, #ff9a00); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(#ffdc00, #ff9a00); /* Firefox 3.6 - 15 */
+  background: linear-gradient(#ffdc00, #ff9a00); /* 标准的语法 */
+}
+.foot{
+	position: absolute;z-index: 99;bottom: 0;height: 40px;width: 100%;left: 0;
+	line-height: 40px;text-align: center;background: rgba(0,0,0,0.4);
+}
+

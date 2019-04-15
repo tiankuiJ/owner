@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/swiper.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/common.css">
+		<link rel="stylesheet" type="text/css" href="../css/style.css">
+		<style>
+			html,
+			body {
+				background: #fffcf4;
+			}
+			
+			.mui-content {
+				background: #fffcf4;
+			}
+			
+			.explain {
+				margin-top: 20px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<!--轮播-->
+			<div class="swiper-container" id="lb">
+				<div class="swiper-wrapper" id="banner"></div>
+				<div class="swiper-pagination"></div>
+			</div>
+			<!--轮播-->
+			<!--活动表决-->
+			<div id="boxs">
+				<div id="decide">
+					<div class="padding_">
+						<!--添加-->
+						<div class="apply show_" id="con">
+							<div class="explain">
+								<h4 id="title"></h4>
+							</div>
+						</div>
+						<div class="btns" id="btn">
+							<a href="javascript:void(0);" class="btn" id="save">提交</a>
+						</div>
+						<!--添加-->
+						<!--推广-->
+						<div class="tg">
+							<h4> / &nbsp;<span>推广</span>&nbsp; / </h4>
+							<div id="tg">
+								<div class="swiper-container">
+									<div class="swiper-wrapper"></div>
+								</div>
+							</div>
+						</div>
+						<!--推广-->
+					</div>
+					<!--点击照片-->
+					<div class="don_title hide_" id="don_tit">
+						<a id="hide_all" class="head_back">
+						</a>
+						<label id="swi_number">1/3</label>
+						<a href="javascript:void(this);" id="del_" class="del_"></a>
+					</div>
+					<div class="swiper-container loop_9 hide_" id="loop_9">
+						<div class="swiper-wrapper" id="fileImg_loop"></div>
+					</div>
+					<!--点击照片-->
+					<!--遮罩-->
+					<div class="news_mark" id="news_mark"></div>
+					<!--遮罩-->
+				</div>
+				<!--加载-->
+				<img src="../img/load.gif" class="load" />
+				<!--加载-->
+			</div>
+			<!--活动表决-->
+		</div>
+		<!--表决成功-->
+		<div class="success">
+			<div class="main">
+				<img src="../img/success.png" />
+				<div class="btns">
+					<a href="javascript:void(0);;" class="btn" id="return">返回</a>
+				</div>
+			</div>
+		</div>
+		<!--表决成功-->
+		<!--轮播-->
+		<script id='bnr' type="text/html">
+			<%for(var i=0;i < rows.length;i++){%>
+			<div class="swiper-slide">
+				<%if(rows[i].url != "" && rows[i].url != undefined){%>
+				<a href="<%=rows[i].url%>" class="img"><img src="<%=rows[i].img%>" /></a>
+				<%}else{%>
+				<a href="javascript:void(0);;" class="img"><img src="<%=rows[i].img%>" /></a>
+				<%}%>
+			</div>
+			<%}%>
+		</script>
+		<!--轮播-->
+		<!--btn-->
+		<script id='btns' type="text/html">
+			<%if(data.startTime <= data.currentDate && data.currentDate<= data.endTime){%>
+			<a href="javascript:void(0);;" class="btn" id="refer">提交</a>
+			<%}else{%>
+			<a href="javascript:void(0);;" class="btn noDo">提交</a>
+			<%}%>
+		</script>
+		<!--btn-->
+		<!--推广-->
+		<script id='tgs' type="text/html">
+			<%for(var i=0;i < rows.length;i++){%>
+			<div class="swiper-slide">
+				<%if(rows[i].url != "" && rows[i].url != undefined){%>
+				<a href="<%=rows[i].url%>" class="img"><img src="<%=rows[i].img%>" /></a>
+				<%}else{%>
+				<a href="javascript:void(0);;" class="img"><img src="<%=rows[i].img%>" /></a>
+				<%}%>
+			</div>
+			<%}%>
+		</script>
+		<!--推广-->
+
+		<script id='cont' type="text/html">
+			<%for(var i=0;i < data.opInfoList.length;i++){%>
+			<div class="explain">
+				<p>
+					<%=data.opInfoList[i].title%>
+				</p>
+				<div class="votes" sid="<%=i%>" id="info<%=i%>">事项说明>></div>
+			</div>
+			<div class="choose choose<%=i%>">
+				<label><input type="radio" id="zt1" name="choose1"/><label for="zt1"  class="btn" bjid="<%=data.opInfoList[i].id%>" sid="<%=i%>">同意</label></label>
+				<label><input type="radio" id="fd1" name="choose1"/><label for="fd1" class="btn" bjid="<%=data.opInfoList[i].id%>" sid="<%=i%>">反对</label></label>
+				<label><input type="radio" id="qq1" name="choose1"/><label for="qq1" class="btn" bjid="<%=data.opInfoList[i].id%>" sid="<%=i%>">弃权</label></label>
+			</div>
+			<div class="applyBox">
+				<textarea rows="5" id="cmt<%=i%>" placeholder="请留下您宝贵的意见"></textarea>
+			</div>
+			<%}%>
+		</script>
+
+		<!--投票说明-->
+		<script id='tpsm' type="text/html">
+			<%for(var i=0;i < data.opInfoList.length;i++){%>
+			<div class="hide_ infoCon" id="info<%=i%>_">
+				<div class="bg"></div>
+				<div class="apply">
+					<img src="../img/del.png" class="onhide" id="del" />
+					<h4> / &nbsp;事项说明&nbsp; / </h4>
+					<div class="applyBox">
+						<div class="p_">
+							<%:=data.opInfoList[i].content%>
+						</div>
+					</div>
+				</div>
+			</div>
+			<%}%>
+		</script>
+		<!--投票说明-->
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/swiper.min.js"></script>
+		<script src="../js/jquery-1.10.2.min.js"></script>
+		<script src="../js/baiduTemplate.js"></script>
+		<script src="../js/common.js"></script>
+		<script language="javascript">
+			var id = getQueryString("id");
+			var choice;
+			var num = 0;
+			var isEnd = false;
+			if(!localStorage.phone) {
+				window.location.href = "login.html";
+			}
+			//活动说明
+			function info() {
+				$("#info").click(function() {
+					$("#explain .bg").show();
+					$("#explain .apply").show()
+				});
+				$("#del").click(function() {
+					$("#explain .bg").hide();
+					$("#explain .apply").hide()
+				});
+			}
+			//活动说明
+
+			//获取表决
+			getBj();
+
+			function getBj() {
+				$.get(localStorage.ROOTPATH + "biaojueDetails.xhtml", {
+					"infoId": id
+				}, function(data) {
+					//渲染页面
+					num = data.data.opInfoList.length;
+					var html = bt('cont', data);
+					var html2 = bt('tpsm', data);
+					$("#con").append(html);
+					$("body").append(html2);
+					$("#title").html(data.data.info.title);
+					
+					
+					cliCon();
+					cliTf();
+					var myDate = new Date();
+					for(var i = 0 ; i < data.data.opInfoList.length ; i++){
+						//if(data.data.opInfoList[i].startTime <= data.data.opInfoList[i].currentDate && data.data.opInfoList[i].currentDate<= data.data.opInfoList[i].endTime){
+						var thisDate = myDate.getFullYear()+"-"+(myDate.getMonth()+1)+"-"+myDate.getDate();
+						if(data.data.opInfoList[i].endTime > thisDate ){
+							mui.toast("当前表决已经结束了。");
+							isEnd = true;
+						}
+					}
+				}, "json");
+			}
+
+			//点击介绍
+			function cliCon() {
+				$(".votes").on("tap", function() {
+					console.log($(this).attr("sid"));
+					var id = $(this).attr("sid");
+					$("#info" + id + "_").show();
+				});
+				$(".bg,.onhide").on("tap", function() {
+					$(".infoCon").hide();
+				});
+			}
+
+			//点击同意、反对
+			function cliTf() {
+				$(".choose .btn").on("tap", function() {
+					var sid = $(this).attr("sid");
+					var isjd = $(this).attr("for");
+					$(".choose" + sid + " .btn").each(function() {
+						$(this).removeClass("back");
+					});
+					$(this).addClass("back");
+					if(isjd == "zt1") {
+						$("#cmt" + sid).attr("disabled", "disabled");
+					} else if(isjd == "fd1" || isjd == "qq1") {
+						$("#cmt" + sid).removeAttr("disabled", "disabled");
+					}
+				});
+			}
+			//提交
+
+			$("#save").on("tap", function() {
+				save();
+			});
+
+			function save() {
+				if(isEnd){
+					mui.toast("当前表决已经结束了。");
+					return;
+				}
+				
+				var isNum = 0;
+				var dataStar = "[";
+				var dataEnd = "]";
+				var isTrue = true;
+				$(".choose .back").each(function() {
+					isNum++;
+					var sid = $(this).attr("sid");
+					var content = $("#cmt" + sid).val();
+					var isjd = $(this).attr("for");
+					var bjId =$(this).attr("bjid");
+					if(isjd == "fd1" || isjd == "qq1") {
+						if(content.length < 1) {
+							mui.toast("请填写您的宝贵建议");
+							isTrue = false;
+							return;
+						}
+					}
+					if(dataStar.length > 2) {
+						dataStar += ",";
+					}
+					dataStar += '{"opId":' + bjId + ',"content":"' + content + '","choice":"' + $(this).html() + '","phone":' + localStorage.phone;
+					dataStar += "}";
+				});
+				if(isNum != num) {
+					mui.toast("请表决完成后再提交");
+					return;
+				}
+				if(!isTrue) {
+					return;
+				}
+
+				$.get(localStorage.ROOTPATH + "batchRegBiaoJue.xhtml", {
+					recordStr: dataStar + dataEnd,
+					phone: window.localStorage.phone
+				}, function(data) {
+					//渲染页面
+					mui.toast(data.message);
+					if(data.success) {
+						setTimeout(function() {
+							history.go(-1);
+						}, 1500);
+					}
+					console.log(JSON.stringify(data));
+				}, "json");
+				console.log(JSON.parse(dataStar + dataEnd));
+			}
+
+			//推广
+			$.get(localStorage.ROOTPATH + "adList.xhtml", {
+				"orgId": orgId,
+				"position": "底部"
+			}, function(data) {
+				//渲染页面
+				var html = bt('tgs', data);
+				$("#tg .swiper-wrapper").html(html);
+				//渲染页面
+				//轮播动效
+				var mySwiper = new Swiper('#tg .swiper-container', {});
+				//轮播动效
+			}, "json");
+			//推广
+
+			//返回
+			$("#return").click(function() {
+				$(".success").hide();
+				setTimeout(function() {
+					history.go(-1);
+				}, 100);
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>社区活动</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="css/mui.min.css">
+    <link rel="stylesheet" href="css/swiper.min.css">
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <style>
+        html,body{
+            background: #ff9900;
+        }
+        .mui-content{
+            background: #ff9900;
+        }
+    </style>
+</head>
+<body>
+<div class="mui-content">
+    <!--轮播-->
+    <div class="swiper-container" id="lb">
+        <div class="swiper-wrapper" id="banner"></div>
+        <div class="swiper-pagination"></div>
+    </div>
+    <!--轮播-->
+    <div id="boxs">
+        <!--列表-->
+        <div id="slider" class="mui-slider mui-fullscreen">
+            <div id="sliderSegmentedControl" class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+                <div class="mui-scroll">
+                    <a class="mui-control-item mui-active" href="#item1mobile">
+                        活动
+                    </a>
+                    <a class="mui-control-item" href="#item2mobile">
+                        投票
+                    </a>
+                    <a class="mui-control-item" href="#item3mobile">
+                        表决
+                    </a>
+                    <a class="mui-control-item" href="#item4mobile">
+                        报名
+                    </a>
+                    <a class="mui-control-item" href="#item5mobile">
+                        提意见
+                    </a>
+                </div>
+            </div>
+            <div class="mui-slider-group" id="list">
+                <div id="item1mobile" class="mui-slider-item mui-control-content mui-active">
+                    <div id="scroll1" class="mui-scroll-wrapper">
+                        <div class="mui-scroll">
+                            <ul class="mui-table-view" id="hd"></ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="item2mobile" class="mui-slider-item mui-control-content">
+                    <div class="mui-scroll-wrapper">
+                        <div class="mui-scroll">
+                            <ul class="mui-table-view" id="tp"></ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="item3mobile" class="mui-slider-item mui-control-content">
+                    <div class="mui-scroll-wrapper">
+                        <div class="mui-scroll">
+                            <ul class="mui-table-view" id="bj"></ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="item4mobile" class="mui-slider-item mui-control-content">
+                    <div class="mui-scroll-wrapper">
+                        <div class="mui-scroll">
+                            <ul class="mui-table-view" id="bm"></ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="item5mobile" class="mui-slider-item mui-control-content">
+                    <div class="mui-scroll-wrapper">
+                        <div class="mui-scroll">
+                            <ul class="mui-table-view" id="tyj"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--列表-->
+        </div>
+</div>
+<!--轮播-->
+<script id='bnr' type="text/html">
+    <%for(var i=0;i < rows.length;i++){%>
+        <div class="swiper-slide">
+            <%if(rows[i].url != "" && rows[i].url != undefined){%>
+                <a href="<%=rows[i].url%>" class="img"><img src="<%=rows[i].img%>"/></a>
+            <%}else{%>
+                <a href="javascript:void(0);;" class="img"><img src="<%=rows[i].img%>"/></a>
+            <%}%>
+        </div>
+    <%}%>
+</script>
+<!--轮播-->
+<!--列表-->
+<script id='lists' type="text/html">
+    <%for(var i=0;i < rows.length;i++){%>
+        <%if(rows[i].img != "" && rows[i].img != undefined){%>
+            <li class="mui-table-view-cell mui-media" id="<%=rows[i].id%>">
+                <a href="javascript:void(0);;">
+                    <div class="img"><img class="mui-media-object mui-pull-left" src="<%=rows[i].img%>"></div>
+                    <div class="mui-media-body">
+                        <span>
+                             <%if(rows[i].title.length >23) { %>
+                                <%=rows[i].title.substring(0,23)%>...
+                             <%}else{%>
+                                <%=rows[i].title%>
+                            <%}%>
+                        </span>
+                        <p class='mui-ellipsis'>发布时间：<%=rows[i].createTime%></p>
+                    </div>
+                </a>
+            </li>
+        <%}else{%>
+            <li class="mui-table-view-cell mui-media" id="<%=rows[i].id%>">
+                <a href="javascript:void(0);;">
+                    <div class="mui-media-body">
+                       <span><%=rows[i].title%></span>
+                        <p class='mui-ellipsis'>发布时间：<%=rows[i].createTime%></p>
+                    </div>
+                </a>
+            </li>
+        <%}%>
+    <%}%>
+</script>
+<!--列表-->
+<script src="js/mui.min.js"></script>
+<script src="js/swiper.min.js"></script>
+<script src="js/jquery-1.10.2.min.js"></script>
+<script src="js/mui.pullToRefresh.js"></script>
+<script src="js/mui.pullToRefresh.material.js"></script>
+<script src="js/baiduTemplate.js"></script>
+<script src="js/common.js"></script>
+<script language="javascript">
+    var hdPage=1;
+    var tpPage=1;
+    var bjPage=1;
+    var bmPage=1;
+    var tyjPage=1;
+    mui('.mui-slider').slider().setStopped(true); //禁止轮播左右滑动
+    (function($) {
+        //阻尼系数
+        var deceleration = mui.os.ios?0.003:0.0009;
+        $('.mui-scroll-wrapper').scroll({
+            bounce: false,
+            indicators: true, //是否显示滚动条
+            deceleration:deceleration
+        });
+        $.ready(function() {
+            //循环初始化所有下拉刷新，上拉加载。
+            $.each(document.querySelectorAll('.mui-slider-group .mui-scroll'), function(index, pullRefreshEl) {
+                $(pullRefreshEl).pullToRefresh({
+                    up: {
+                        callback: function() {
+                            var self = this;
+                            setTimeout(function() {
+                                var ul = self.element.querySelector('.mui-table-view');
+                                createFragment(index, self);
+                            }, 1000);
+                        }
+                    }
+                });
+            });
+        });
+    })(mui);
+    createFragment(0);
+    createFragment(1);
+    createFragment(2);
+    createFragment(3);
+    createFragment(4);
+    function createFragment(index, self) {
+        switch(index) {
+            case 0:
+                loadData("activityList.xhtml", hdPage,"", "hd",self);
+                hdPage++;
+                break;
+            case 1:
+                loadData("voteList.xhtml", tpPage, "","tp",self);
+                tpPage++;
+                break;
+            case 2:
+                loadData("opList.xhtml", bjPage,"表决","bj", self);
+                bjPage++;
+                break;
+            case 3:
+                loadData("opList.xhtml", bmPage,"报名","bm", self);
+                bmPage++;
+                break;
+            case 4:
+                loadData("opList.xhtml", tyjPage,"意见","tyj", self);
+                tyjPage++;
+                break;
+        }
+        return "";
+    }
+
+    function loadData(url, page,type,cmtId,self) {
+        $.get(localStorage.ROOTPATH + url, {
+            orgId: orgId,
+            type:type,
+            page: page,
+            rows: 5
+        }, function(data) {
+            //渲染页面
+            var html = bt('lists', data);
+            document.getElementById(cmtId).innerHTML += html;
+            //渲染页面
+            if(self) {
+                self.endPullUpToRefresh();
+            }
+            //点击到详情
+            $("#hd li").each(function() {
+                $(this).on("tap", function() {
+                    window.location.href = "index.html?id=" + this.id+"&orgId="+orgId;
+                });
+            });
+            $("#tp li").each(function() {
+                $(this).on("tap", function() {
+                    window.location.href = "menu/vote.html?id=" + this.id+"&orgId="+orgId;
+                });
+            });
+            $("#bj li").each(function() {
+                $(this).on("tap", function() {
+                    window.location.href = "menu/decide.html?id=" + this.id+"&orgId="+orgId;
+                });
+            });
+            $("#bm li").each(function() {
+                $(this).on("tap", function() {
+                    window.location.href = "menu/apply.html?id=" + this.id+"&orgId="+orgId;
+                });
+            });
+            $("#tyj li").each(function() {
+                $(this).on("tap", function() {
+                    window.location.href = "menu/opinion.html?id=" + this.id+"&orgId="+orgId;
+                });
+            });
+            //点击到详情
+        }, "json");
+    }
+</script>
+</body>
+</html>

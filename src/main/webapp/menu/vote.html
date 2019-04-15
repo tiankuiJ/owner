@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/swiper.min.css">
+		<link rel="stylesheet" type="text/css" href="../css/common.css">
+		<link rel="stylesheet" type="text/css" href="../css/style.css">
+		<style>
+			html,
+			body {
+				background: #fffcf4;
+			}
+			
+			.mui-content {
+				background: #ff9900;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<!--轮播-->
+			<div class="swiper-container" id="lb">
+				<div class="swiper-wrapper" id="banner"></div>
+				<div class="swiper-pagination"></div>
+			</div>
+			<!--轮播-->
+			<!--选举-->
+			<ul class="mui-table-view mui-table-view-chevron" id="notice">
+				<li class="mui-table-view-cell">
+					<h4 id="title"></h4>
+					<p>投票规则：<span id="rule"></span></p>
+					<div class="votes" id="info">事项说明>></div>
+				</li>
+			</ul>
+			<!--选举-->
+			<!--投票-->
+			<div id="votes">
+				<div id="vote">
+					<ul class="mui-table-view" id="tpList"></ul>
+				</div>
+				<div class="bottom">
+					<div class="mui-pull-left" id="xz">
+						<p>您已选<span> 0 </span>/ 0票</p>
+					</div>
+					<div class="mui-pull-right" id="btn">
+					</div>
+				</div>
+			</div>
+			<!--投票-->
+		</div>
+		<!--遮罩-->
+		<div class="news_mark" id="news_mark"></div>
+		<!--遮罩-->
+		<!--加载-->
+		<img src="../img/load.gif" class="load" />
+		<!--加载-->
+		<!--轮播-->
+		<script id='bnr' type="text/html">
+			<%for(var i=0;i < rows.length;i++){%>
+			<div class="swiper-slide">
+				<%if(rows[i].url != "" && rows[i].url != undefined){%>
+				<a href="<%=rows[i].url%>" class="img"><img src="<%=rows[i].img%>" /></a>
+				<%}else{%>
+				<a href="javascript:void(0);;" class="img"><img src="<%=rows[i].img%>" /></a>
+				<%}%>
+			</div>
+			<%}%>
+		</script>
+		<!--轮播-->
+		<!--btn-->
+		<script id='btns' type="text/html">
+			<%if(data.vote.startTime <= data.vote.currentDate && data.vote.currentDate <= data.vote.endTime){%>
+			<div id="confirmBtn">立即投票</div>
+			<%}else{%>
+			<div class="noDo">立即投票</div>
+			<%}%>
+		</script>
+		<!--btn-->
+		<!--投票说明-->
+		<div id="explain">
+			<div class="bg hide_"></div>
+			<div class="apply hide_">
+				<img src="../img/del.png" id="del" />
+				<h4> / &nbsp;事项说明&nbsp; / </h4>
+				<div class="applyBox">
+					<div class="p_" id="content"></div>
+				</div>
+			</div>
+		</div>
+		<!--投票说明-->
+		<!--投票列表-->
+		<script id='list' type="text/html">
+			<%for(var i=0;i < data.options.length;i++){%>
+			<%if(data.options[i].img != "" && data.options[i].img != undefined){%>
+			<li class="mui-table-view-cell mui-media" id="<%=data.options[i].id%>" voteId="<%=data.options[i].voteId%>">
+				<div class="img"><img class="mui-media-object mui-pull-left" src="<%=data.options[i].img%>"></div>
+				<div class="mui-media-body">
+					<%=data.options[i].name%>
+					<%if(data.vote.showNum != "否" ){%>
+					<p class='mui-ellipsis'>获得：<span><%=data.options[i].choiceNum%></span> 票 </p>
+					<%}%>
+				</div>
+				<div class="choose choose<%=[i+1]%>">
+					<label class="rule<%=[i+1]%> rule"><input type="radio" id="zt<%=[i+1]%>" name="choose<%=[i+1]%>"/><label for="zt<%=[i+1]%>" class="btn">同意</label></label>
+					<label><input type="radio" id="fd<%=[i+1]%>" name="choose<%=[i+1]%>"/><label for="fd<%=[i+1]%>" class="btn">反对</label></label>
+					<label><input type="radio" id="qq<%=[i+1]%>" name="choose<%=[i+1]%>"/><label for="qq<%=[i+1]%>" class="btn">弃权</label></label>
+				</div>
+				<%if(data.vote.showRank != "否" ){%>
+				<div class="rank">第
+					<%=[i+1]%>名</div>
+				<%}%>
+			</li>
+			<%}else{%>
+			<li class="mui-table-view-cell mui-media" id="<%=data.options[i].id%>" voteId="<%=data.options[i].voteId%>">
+				<div class="mui-media-body">
+					<%=data.options[i].name%>
+					<%if(data.vote.showNum != "否" ){%>
+					<p class='mui-ellipsis'>获得：<span><%=data.options[i].choiceNum%></span> 票 </p>
+					<%}%>
+				</div>
+				<div class="choose choose<%=[i+1]%>">
+					<label class="rule<%=[i+1]%> rule"><input type="radio" id="zt<%=[i+1]%>" name="choose<%=[i+1]%>"/><label for="zt<%=[i+1]%>" class="btn">同意</label></label>
+					<label><input type="radio" id="fd<%=[i+1]%>" name="choose<%=[i+1]%>"/><label for="fd<%=[i+1]%>" class="btn">反对</label></label>
+					<label><input type="radio" id="qq<%=[i+1]%>" name="choose<%=[i+1]%>"/><label for="qq<%=[i+1]%>" class="btn">弃权</label></label>
+				</div>
+				<%if(data.vote.showRank != "否" ){%>
+				<div class="rank">第
+					<%=[i+1]%>名</div>
+				<%}%>
+			</li>
+			<%}%>
+			<%}%>
+		</script>
+		<!--投票列表-->
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/swiper.min.js"></script>
+		<script src="../js/jquery-1.10.2.min.js"></script>
+		<script src="../js/baiduTemplate.js"></script>
+		<script src="../js/common.js"></script>
+		<script language="javascript">
+			var id = getQueryString("id");
+			var num;
+			var nums;
+			var number;
+			var length;
+			var choice;
+
+			//事项说明
+			function info() {
+				$("#info").click(function() {
+					$("#explain .bg").show();
+					$("#explain .apply").show()
+				});
+				$("#del").click(function() {
+					$("#explain .bg").hide();
+					$("#explain .apply").hide()
+				});
+			}
+			//事项说明
+
+			///标题
+			$.get(localStorage.ROOTPATH + "voteInfo.xhtml", {
+				"id": id
+			}, function(data) {
+				//渲染页面
+				$("title").html(data.data.vote.title);
+				$("#title").html(data.data.vote.title);
+				$("#content").html(data.data.vote.content);
+				//渲染页面
+				//渲染页面
+				var html = bt('list', data);
+				$("#tpList").html(html);
+				//渲染页面
+				//btn
+				var html = bt('btns', data);
+				$("#btn").html(html);
+				//btn
+				info();
+				btn();
+
+				//rule
+				$("#rule").html($("#tpList").find("li").length + "选" + data.data.vote.maxUserVote);
+				//rule
+				$("#xz").html('<p>您已选<span> ' + 0 + ' </span>/ ' + data.data.vote.maxUserVote + '票</p>');
+
+				//点击按钮选择
+				for(num = 1; num < data.data.options.length + 1; num++) {
+					$(".choose" + num + " input").each(function() {
+						$(this).click(function() {
+							if($(this).is(":checked")) {
+								if($(this).parent().find(".btn").hasClass('back')) {
+									$(this).parent().parent().find(".btn").removeClass("back");
+									$(this).attr("checked", false);
+								} else {
+									$(this).parent().parent().find(".btn").removeClass("back");
+									$(this).parent().find(".btn").addClass('back');
+								}
+							}
+
+							if($(".rule").find(".back").length > data.data.vote.maxUserVote) {
+								mui.toast("超过最大投票数！");
+								$(this).parent().parent().find(".btn").removeClass("back");
+								$(this).attr("checked", false);
+							}
+
+							$("#xz").html('<p>您已选<span> ' + $(".rule").find(".back").length + ' </span>/ ' + data.data.vote.maxUserVote + '票</p>');
+						});
+					});
+				}
+				//点击按钮选择
+
+				//投票
+				function btn() {
+					$("#confirmBtn").blur("tap");
+					$("#confirmBtn").on("tap", function() {
+						//是否登录
+						if(!localStorage.phone) {
+							mui.toast("该操作需要登录验证");
+							$(location).attr("href", "../menu/login.html");
+						} else {
+							var btnArray = ['否', '是'];
+							mui.confirm('是否立即投票？', '提示', btnArray, function(e) {
+								if(e.index == 1) {
+									var recordStr = [];
+									$("#tpList li").each(function() {
+										var pd = $(this).find(".back");
+										var strqq = "弃权";
+										if(pd.length > 0) {
+											strqq = $(this).find(".back").html();
+										}
+										var str = {
+											userId: localStorage.phone,
+											caId: $(this).attr("id"),
+											voteId: $(this).attr("voteId"),
+											choice: strqq
+										};
+										recordStr.push(str);
+									});
+									//加载
+									$(".news_mark").show();
+									$(".load").show();
+									//加载
+									$.get(localStorage.ROOTPATH + "regVote.xhtml", {
+										"recordStr": JSON.stringify(recordStr),
+										"phone": localStorage.phone
+									}, function(data) {
+										//加载
+										$(".news_mark").hide();
+										$(".load").hide();
+										//加载
+										if(data.success) {
+											mui.toast(data.message);
+											setTimeout(function() {
+												history.go(-1);
+											}, 100);
+										} else {
+											mui.toast(data.message);
+										}
+									}, "json");
+								}
+							})
+						}
+					});
+				}
+				//投票
+			}, "json");
+			///标题
+		</script>
+	</body>
+
+</html>

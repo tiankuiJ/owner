@@ -1,0 +1,91 @@
+html,
+body {
+    background-color: #FFFFFF;
+    font-family: 'Helvetica Neue', Helvetica, sans-serif;
+    font-size: 17px;
+    line-height: 21px;
+    color: #000;
+    background-color: #efeff4;
+    margin:0;
+    -webkit-overflow-scrolling: touch;
+    padding:0;
+    margin:0;
+}
+
+.clear {
+    clear: both;
+}
+
+.new_content{
+    padding: 5px 15px 15px 15px !important;background-color: white;
+}
+.new_title h4{
+    font-size: 21px;line-height: 24px;
+}
+.new_title h5{
+    font-size: 13px;color: #666;margin-top: 10px;float: left;
+}
+.new_title img{
+    float: left;width: 20px;margin-top: 10px;margin-right: 5px;
+}
+.new_con{
+    padding-top: 10px;padding-bottom: 50px;
+}
+.new_con img{
+    max-width: 100%;
+}
+.new_con a,p,label,span,div{
+    font-size:16px;
+    color:#333 ;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    line-height: 1;
+    margin-top: 5px;
+    margin-bottom: 5px
+}
+
+.mui-h1,
+h1 {
+    font-size: 36px;
+}
+
+.mui-h2,
+h2 {
+    font-size: 30px;
+}
+
+.mui-h3,
+h3 {
+    font-size: 24px;
+}
+
+.mui-h4,
+h4 {
+    font-size: 18px;
+}
+
+.mui-h5,
+h5 {
+    font-size: 14px;
+    font-weight: 400;
+    color: #8f8f94;
+}
+
+.mui-h6,
+h6 {
+    font-size: 12px;
+    font-weight: 400;
+    color: #8f8f94;
+}
+
+p {
+    font-size: 16px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #333;
+}

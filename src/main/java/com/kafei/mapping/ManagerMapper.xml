@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kafei.mapper.ManagerMapper" >
+  <resultMap id="BaseResultMap" type="com.kafei.vo.Manager" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="psd" property="psd" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="org_id" property="orgId" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, account, psd, org_id, create_time,name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from o_manager
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    UPDATE o_manager set deleted=1
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="insertSelective" parameterType="com.kafei.vo.Manager" >
+    insert into o_manager
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="psd != null" >
+        psd,
+      </if>
+      <if test="orgId != null" >
+        org_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="psd != null" >
+        #{psd,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null" >
+        #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        #{name},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.kafei.vo.Manager" >
+    update o_manager
+    <set >
+      <if test="account != null" >
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="psd != null" >
+        psd = #{psd,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null" >
+        org_id = #{orgId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null" >
+        name=#{name},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="login" parameterType="manager" resultType="manager">
+    SELECT
+      a.id,
+      a.name,
+      b. NAME AS orgName,
+      a.org_id AS orgId,
+      b.type AS orgType
+    FROM
+      o_manager a LEFT JOIN
+      o_org b ON a.org_id=b.id
+    WHERE
+      account=#{account} and psd=#{psd} AND a.deleted!=1
+  </select>
+
+  <select id="selectList" parameterType="manager" resultMap="BaseResultMap">
+    SELECT id, account, psd, org_id, create_time,name  FROM o_manager WHERE deleted!=1
+    <if test="orgId!=null">
+      and org_id=#{orgId}
+    </if>
+    <if test="account!=null">
+      and account=#{account}
+    </if>
+    <if test="searchStr!=null">
+      and concat(account, name) like concat('%',#{searchStr},'%')
+    </if>
+
+  </select>
+</mapper>

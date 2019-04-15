@@ -1,0 +1,97 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
+<c:set var="managerType" scope="session" value="${sessionScope.managerSession.orgType}"></c:set>
+<c:set var="managerOrgName" scope="session" value="${sessionScope.managerSession.orgName}"></c:set>
+<c:set var="managerOrgId" scope="session" value="${sessionScope.managerSession.orgId}"></c:set>
+<title>社区公共服务管理系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Cache-Control" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<meta http-equiv="X-UA-Compatible" content="E=edge;chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<link href="${ctx }/resources/images/favicon.ico" rel="icon"/>
+<link href="${ctx }/resources/images/favicon.ico" type="image/x-icon" rel="bookmark"/>   
+<link href="${ctx }/resources/images/favicon.ico" type="image/x-icon" rel="shortcut icon"/>  
+<!-- basic styles -->
+<link rel="stylesheet" href="${ctx}/resources/js/bootstrap/bootstrap.min.css"/>
+<link rel="stylesheet" href="${ctx}/resources/fonts/fontawesome/font-awesome.min.css" media="all"/>
+<link rel="stylesheet" href="${ctx}/resources/fonts/opensans/ace-fonts.min.css"/>
+<link rel="stylesheet" href="${ctx}/resources/css/ace/ace.min.css" class="ace-main-stylesheet" id="main-ace-style"/>
+<link rel="stylesheet" href="${ctx}/resources/css/style.css"/>
+<!--[if lte IE 9]>
+	<link rel="stylesheet" href="${ctx}/resources/css/ace/ace-ie.min.css" />
+<![endif]-->
+<!-- JQuery script -->
+<!--[if !IE]><!-->
+
+<!-- jqgrid -->
+<link rel="stylesheet" href="${ctx}/resources/js/jqgrid/ui.jqgrid.css"/>
+
+<script type="text/javascript" src="${ctx}/resources/datepicker/js/jquery.js"></script>
+<!--<![endif]-->
+<!--[if IE]>
+<![endif]-->
+<!-- basic scripts -->
+<script type="text/javascript" src="${ctx}/resources/js/bootstrap/bootstrap.min.js"></script>
+<!--[if lt IE 9]>
+<script type="text/javascript" src="${ctx}/resources/js/ie/html5shiv.js"></script>
+<script type="text/javascript" src="${ctx}/resources/js/ie/respond.min.js"></script>
+<![endif]-->
+<!--[if lt IE 8]>
+<script src="${ctx}/resources/js/ie/json2.js"></script>
+<![endif]-->
+<!--[if lte IE 8]>
+<script type="text/javascript" src="${ctx}/resources/js/ie/excanvas.min.js"></script>
+<![endif]-->
+
+<!-- ace scripts -->
+<script type="text/javascript" src="${ctx}/resources/js/ace/ace.js"></script>
+<script type="text/javascript" src="${ctx}/resources/js/ace/ace-extra.min.js"></script>
+<script type="text/javascript" src="${ctx}/resources/js/ace/elements.scroller.js"></script>
+<script type="text/javascript" src="${ctx}/resources/js/ace/ace.sidebar.js"></script>
+<script type="text/javascript" src="${ctx}/resources/js/ace/ace.sidebar-scroll-1.js"></script>
+<script type="text/javascript" src="${ctx}/resources/js/ace/ace.settings.js"></script>
+<script type="text/javascript" src="${ctx}/resources/js/ace/ace.settings-skin.js"></script>
+<script type="text/javascript" src="${ctx}/resources/js/ace/ace.widget-box.js"></script>
+
+<!-- jqgrid -->
+<script type="text/javascript" src="${ctx}/resources/js/jqgrid/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="${ctx}/resources/js/jqgrid/jquery.jqGrid.min.js"></script>
+
+<!-- jquery-validation 表单验证 -->
+<script type="text/javascript" src="${ctx}/resources/js/jquery-validation/jquery.validate.min.js"></script>
+<script type="text/javascript" src="${ctx}/resources/js/jquery-validation/localization/messages_zh.js"></script>
+
+<!-- nicescroll 滚动条 -->
+<script type="text/javascript" src="${ctx}/resources/js/nicescroll/jquery.nicescroll.min.js"></script>
+
+<!-- layer 弹出层 -->
+<script type="text/javascript" src="${ctx}/resources/js/layer-v2.1/layer.js"></script>
+
+<script type="text/javascript" src="${ctx}/resources/js/customer/index/index.js"></script>
+
+
+<!--   kindeditor   -->
+<script type="text/javascript" type="text/javascript" src="${ctx}/resources/js/kindeditor/kindeditor-all.js"/>
+<script type="text/javascript" src="${ctx}/resources/js/kindeditor/base.js"></script>
+<script src="${ctx}/resources/js/kindeditor/lang/zh-CN.js"></script>
+<link rel="stylesheet" href="${ctx}/resources/js/kindeditor/themes/default/default.css">
+<script type="text/javascript">
+var sys = sys || {};
+sys.rootPath = "${ctx}";
+sys.pageNum = 10;
+sys.gridStyle = "Bootstrap";
+sys.managerType = "${managerType}"
+sys.managerOrgName = "${managerOrgName}"
+sys.managerOrgId = "${managerOrgId}"
+$.jgrid.defaults.styleUI = 'Bootstrap';
+
+</script>

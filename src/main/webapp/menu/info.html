@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../css/mui.min.css">
+    <link rel="stylesheet" href="../css/swiper.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+    <style>
+        html,body{
+            background: #fffcf4;
+        }
+        .mui-content{
+            background: #fffcf4;
+        }
+    </style>
+</head>
+<body>
+<div class="mui-content">
+    <!--轮播-->
+    <div class="swiper-container" id="lb">
+        <div class="swiper-wrapper" id="banner"></div>
+        <div class="swiper-pagination"></div>
+    </div>
+    <!--轮播-->
+    <!--详情-->
+    <div id="boxs">
+        <div id="info" class="padding_">
+            <h4 id="title"></h4>
+            <div class="img" id="video"></div>
+            <div class="p_" id="content"></div>
+        </div>
+    </div>
+    <!--详情-->
+</div>
+<!--轮播-->
+<script id='bnr' type="text/html">
+    <%for(var i=0;i < rows.length;i++){%>
+        <div class="swiper-slide">
+            <%if(rows[i].url != "" && rows[i].url != undefined){%>
+                <a href="<%=rows[i].url%>" class="img"><img src="<%=rows[i].img%>"/></a>
+            <%}else{%>
+                <a href="javascript:void(0);;" class="img"><img src="<%=rows[i].img%>"/></a>
+            <%}%>
+        </div>
+    <%}%>
+</script>
+<!--轮播-->
+<!--视频-->
+<script id='videos' type="text/html">
+    <%if(data.video != "" && data.video != undefined) { %>
+        <video controls="controls">
+            <source src="<%=data.video%>" type="video/mp4">您的浏览器不支持视频播放</source>
+        </video>
+    <%}%>
+</script>
+<!--视频-->
+<!--按钮-->
+<script id='btns' type="text/html">
+    <%if(state==0) { %>
+        <div class="btns">
+            <a href="../menu/apply.html?id=<%=data.oid%>" class="btn">我要报名</a>
+        </div>
+    <%}else if(state==1) {%>
+        <div class="btns">
+            <a href="../menu/decide.html?id=<%=data.oid%>" class="btn">我要表决</a>
+        </div>
+    <%}else if(state==2) {%>
+        <div class="btns">
+            <a href="../menu/opinion.html?id=<%=data.oid%>" class="btn">我要提建议</a>
+        </div>
+    <%}else if(state==3) {%>
+        <div class="btns">
+            <a href="../menu/vote.html?id=<%=data.oid%>" class="btn">我要投票</a>
+        </div>
+    <%}%>
+</script>
+<!--按钮-->
+<script src="../js/mui.min.js"></script>
+<script src="../js/swiper.min.js"></script>
+<script src="../js/jquery-1.10.2.min.js"></script>
+<script src="../js/baiduTemplate.js"></script>
+<script src="../js/common.js"></script>
+<script language="javascript">
+    var id = getQueryString("id");
+    var state = getQueryString("state");
+
+    //详情
+    $.get(localStorage.ROOTPATH + "infoDetail.xhtml", {
+        "id":id
+    }, function(data) {
+        //渲染页面
+        $("title").html(data.data.title);
+        $("#title").html(data.data.title);
+        $("#content").html(data.data.content);
+
+        var html = bt('btns', data);
+        $("#info").append(html);
+
+        var html = bt('videos', data);
+        $("#video").append(html);
+        //渲染页面
+    }, "json");
+    //详情
+</script>
+</body>
+</html>

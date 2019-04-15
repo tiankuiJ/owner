@@ -1,0 +1,58 @@
+/* TABLES */
+
+.table-bordered {
+    border: 1px solid #EBEBEB;
+}
+
+.table-bordered > thead > tr > th,
+.table-bordered > thead > tr > td {
+    background-color: #F5F5F6;
+    border-bottom-width: 1px;
+}
+
+.table-bordered > thead > tr > th,
+.table-bordered > tbody > tr > th,
+.table-bordered > tfoot > tr > th,
+.table-bordered > thead > tr > td,
+.table-bordered > tbody > tr > td,
+.table-bordered > tfoot > tr > td {
+    border: 1px solid #e7e7e7;
+}
+
+.table > thead > tr > th {
+    border-bottom: 1px solid #DDDDDD;
+    vertical-align: bottom;
+}
+
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+    border-top: 1px solid #e7eaec;
+    line-height: 1.42857;
+    padding: 6px;
+    vertical-align: middle;
+}
+
+
+/* PANELS */
+.ibox-content {
+    background-color: #ffffff;
+    color: inherit;
+    padding: 15px 20px 20px 20px;
+    border-color: #e7eaec;
+    -webkit-border-image: none;
+    -o-border-image: none;
+    border-image: none;
+    border-style: solid solid none;
+    border-width: 1px 0px;
+}
+.ibox-content {
+    clear: both;
+}
+.span-help{
+	color: gray;
+	padding:7px;
+}

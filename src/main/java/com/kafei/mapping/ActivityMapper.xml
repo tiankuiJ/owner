@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kafei.mapper.ActivityMapper">
+    <resultMap id="BaseResultMap" type="com.kafei.vo.Activity">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="img" property="img" jdbcType="VARCHAR"/>
+        <result column="org_id" property="orgId" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="current_op" property="currentOp" jdbcType="VARCHAR"/>
+        <result column="view_num" property="viewNum" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="content" property="content" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, title, img, org_id, user_id, status, view_num, create_time,current_op,content,qrCode
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from o_activity
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM o_activity
+        WHERE id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insertSelective" parameterType="com.kafei.vo.Activity" useGeneratedKeys="true" keyProperty="id">
+        insert into o_activity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="title != null and title != ''">
+                title,
+            </if>
+            <if test="img != null">
+                img,
+            </if>
+            <if test="orgId != null">
+                org_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="viewNum != null">
+                view_num,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="title != null and title != ''">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="img != null">
+                #{img,jdbcType=VARCHAR},
+            </if>
+            <if test="orgId != null">
+                #{orgId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="viewNum != null">
+                #{viewNum,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="content != null">
+                #{content},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.kafei.vo.Activity">
+        update o_activity
+        <set>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="img != null">
+                img = #{img,jdbcType=VARCHAR},
+            </if>
+            <if test="orgId != null">
+                org_id = #{orgId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="viewNum != null">
+                view_num = #{viewNum,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="currentOp != null">
+                current_op = #{currentOp},
+            </if>
+            <if test="content != null">
+                content=#{content},
+            </if>
+            <if test="qrCode != null">
+                qrCode=#{qrCode},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <select id="selectList" parameterType="activity" resultType="activity">
+        select
+        a.id, a.title, a.img, a.org_id AS orgId, a.user_id AS userId, a.status, a.view_num AS viewNum, a.create_time AS
+        createTime,b.name AS orgName,a.qrCode
+        from o_activity a, o_org b
+        <where>
+            a.org_id=b.id
+           and a.del!=1
+            <if test="childOrg==null and orgId!=null">
+                and a.org_id=#{orgId}
+            </if>
+            <if test="orgPid!=null">
+                and (b.id=#{orgPid} or  b.p_id=#{orgPid})
+            </if>
+            <if test="childOrg!=null and orgId!=null">
+                and (a.org_id in
+                <foreach collection="childOrg" item="item" open="(" separator="," close=")">
+                    #{item.id}
+                </foreach> or a.org_id=#{orgId}
+                )
+            </if>
+            <if test="searchStr!=null">
+                and concat(a.title) like concat('%',#{searchStr},'%')
+            </if>
+            <if test="status!=null">
+                and a.status='已发布'
+            </if>
+        </where>ORDER BY a.create_time DESC
+    </select>
+
+
+    <select id="webSelectList" parameterType="activity" resultType="activity">
+        select
+        a.id, a.title, a.img, a.org_id AS orgId, a.user_id AS userId, a.status, a.view_num AS viewNum, a.create_time AS
+        createTime,b.name AS orgName,a.qrCode
+        from o_activity a, o_org b
+        <where>
+            a.org_id=b.id
+            and a.del!=1
+            <if test="orgPid!=null">
+                and (a.org_id=#{orgPid} or  a.org_id=#{orgId})
+            </if>
+            <if test="searchStr!=null">
+                and concat(a.title) like concat('%',#{searchStr},'%')
+            </if>
+            <if test="status!=null">
+                and a.status='已发布'
+            </if>
+        </where>ORDER BY a.create_time DESC
+    </select>
+</mapper>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="../css/mui.min.css">
+    <link rel="stylesheet" href="../css/swiper.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+    <style>
+        html,body{
+            background: #fffcf4;
+        }
+        .mui-content{
+            background: #fffcf4;
+        }
+    </style>
+</head>
+<body>
+<div class="mui-content">
+    <!--轮播-->
+    <div class="swiper-container" id="lb">
+        <div class="swiper-wrapper" id="banner"></div>
+        <div class="swiper-pagination"></div>
+    </div>
+    <!--轮播-->
+    <!--我要报名-->
+    <div id="boxs">
+        <div id="apply">
+            <div class="padding_">
+                <div class="explain">
+                    <h4 id="title"></h4>
+                    <p></p>
+                    <div class="votes" id="info">事项说明>></div>
+                </div>
+                <div class="apply show_">
+                    <div class="applyBox">
+                        <textarea rows="5" placeholder="请填写报名理由" id="cmt"></textarea>
+                        <div class="news_clickImg" id="confirmBtn">
+                            <img src="../img/picture.png"/>
+                        </div>
+                        <input id="putImg" class="hide_" type="file" accept="image/*"/>
+                        <div class="don_imgs">
+                            <ul class="mui-table-view" id="file_imgs">
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="btns" id="btn"></div>
+                </div>
+            </div>
+        </div>
+        <!--加载-->
+        <img src="../img/load.gif" class="load"/>
+        <!--加载-->
+    </div>
+    <!--我要报名-->
+</div>
+<!--点击照片-->
+<div class="don_title hide_" id="don_tit">
+    <a id="hide_all" class="head_back">
+    </a>
+    <label id="swi_number">1/3</label>
+    <a href="javascript:void(this);" id="del_" class="del_"></a>
+</div>
+<div class="swiper-container loop_9 hide_" id="loop_9">
+    <div class="swiper-wrapper" id="fileImg_loop"></div>
+</div>
+<!--遮罩-->
+<div class="news_mark" id="news_mark"></div>
+<!--遮罩-->
+<!--点击照片-->
+<!--轮播-->
+<script id='bnr' type="text/html">
+    <%for(var i=0;i < rows.length;i++){%>
+        <div class="swiper-slide">
+            <%if(rows[i].url != "" && rows[i].url != undefined){%>
+                <a href="<%=rows[i].url%>" class="img"><img src="<%=rows[i].img%>"/></a>
+            <%}else{%>
+                <a href="javascript:void(0);;" class="img"><img src="<%=rows[i].img%>"/></a>
+            <%}%>
+        </div>
+    <%}%>
+</script>
+<!--轮播-->
+<!--btn-->
+<script id='btns' type="text/html">
+    <%if(data.startTime <= data.currentDate && data.currentDate<= data.endTime){%>
+        <a href="javascript:void(0);;" class="btn" id="refer">提交</a>
+    <%}else{%>
+        <a href="javascript:void(0);;" class="btn noDo">提交</a>
+    <%}%>
+</script>
+<!--btn-->
+<!--投票说明-->
+<div id="explain">
+    <div class="bg hide_"></div>
+    <div class="apply hide_">
+        <img src="../img/del.png" id="del"/>
+        <h4> / &nbsp;事项说明&nbsp; / </h4>
+        <div class="applyBox">
+            <div class="p_" id="content"></div>
+        </div>
+    </div>
+</div>
+<!--投票说明-->
+<script src="../js/mui.min.js"></script>
+<script src="../js/swiper.min.js"></script>
+<script src="../js/jquery-1.10.2.min.js"></script>
+<script src="../js/baiduTemplate.js"></script>
+<script src="../js/common.js"></script>
+<script language="javascript">
+    var id = getQueryString("id");
+
+    //事项说明
+    function info(){
+        $("#info").click(function() {
+            $("#explain .bg").show();
+            $("#explain .apply").show()
+        });
+        $("#del").click(function() {
+            $("#explain .bg").hide();
+            $("#explain .apply").hide()
+        });
+    }
+    //事项说明
+
+    ///标题
+    $.get(localStorage.ROOTPATH + "opInfoDetail.xhtml", {
+        "id":id
+    }, function(data) {
+        //渲染页面
+        $("title").html(data.data.title);
+        $("#title").html(data.data.title);
+        $("#content").html(data.data.content);
+        //渲染页面
+        //btn
+        var html = bt('btns', data);
+        $("#btn").html(html);
+        //btn
+        info();
+        btn();
+    }, "json");
+    ///标题
+
+    //报名
+    function btn(){
+        $("#refer").blur("tap");
+        $("#refer").on("tap", function() {
+            if(!localStorage.phone) {
+                mui.toast("该操作需要登录验证");
+                $(location).attr("href", "../menu/login.html");
+            }else{
+                var content = $('#cmt').val();
+                if(content == "") {
+                    mui.toast('请输入');
+                }else{
+                    //加载
+                    $(".news_mark").show();
+                    $(".load").show();
+                    //加载
+                    if(imgPath.length < 1){
+                        $.post(localStorage.ROOTPATH + "regInfo.xhtml", {
+                            "opId": id,
+                            "content": content,
+                            "phone":localStorage.phone
+                        }, function(data) {
+                            //加载
+                            $(".news_mark").hide();
+                            $(".load").hide();
+                            //加载
+                            if(data.success){
+                                mui.toast(data.message);
+                                setTimeout(function(){
+                                    history.go(-1);
+                                },2000);
+                            }else {
+                                mui.toast(data.message);
+                            }
+                        }, "json");
+                    } else {
+                        var formData = new FormData();
+                        for(var i = 0; i < imgPath.length; i++) {
+                            formData.append("img", imgPath[i]);
+                        }
+                        $.ajax({
+                            type: "post",
+                            url: localStorage.ROOTPATH + "upload/upload.xhtml",
+                            data: formData,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            dataType: "json",
+                            error: function(request) {
+                                console.log(JSON.stringify(request));
+                            },
+                            success: function(data) {
+                                $.post(localStorage.ROOTPATH + "regInfo.xhtml", {
+                                    "opId": id,
+                                    "content": content,
+                                    "imgs": data.url,
+                                    "phone":localStorage.phone
+                                }, function(data) {
+                                    //加载
+                                    $(".news_mark").hide();
+                                    $(".load").hide();
+                                    //加载
+                                    if(data.success){
+                                        mui.toast(data.message);
+                                        setTimeout(function(){
+                                            history.go(-1);
+                                        },2000);
+                                    }else {
+                                        mui.toast(data.message);
+                                    }
+                                }, "json");
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
+    //报名
+
+    ///标题
+    $.get(localStorage.ROOTPATH + "opInfoDetail.xhtml", {
+        "id":id
+    }, function(data) {
+        //渲染页面
+        $("#title").html(data.data.title);
+        $("#content").html(data.data.content);
+        //渲染页面
+        info();
+    }, "json");
+    ///标题
+
+
+
+    //弹出
+    var imgPath = [];
+    //点击显示遮罩
+    function hide_mark() {
+        $("#don_tit").hide();
+        $("#loop_9").hide();
+        $("#news_mark").hide();
+        $("body").css("overflow", "auto");
+    }
+    //点击图片出现轮播
+    var img_number = 0;
+    var swiper;
+    var this_index = 0;
+    img_click();
+    function img_click() {
+        $("#file_imgs li").each(function() {
+            $(this).unbind();
+        });
+        $("#swi_number").html((this_index + 1) + "/" + img_number);
+        $("#file_imgs li").each(function() {
+            $(this).on("tap", function() {
+                $("#don_tit").show();
+                $("#loop_9").show();
+                $("body").css("overflow", "none");
+                swiper = new Swiper('#loop_9', {
+                    pagination: '#loop_9 .swiper-pagination',
+                    paginationClickable: true,
+                    preventClicks: false,
+                    onSlideChangeStart: function(swiper) {
+                        this_index = swiper.activeIndex;
+                        $("#swi_number").html((this_index + 1) + "/" + img_number);
+                    }
+                });
+            });
+        });
+    }
+    //点击图片出现轮播
+    //返回
+    $("#hide_all").click(function() {
+        hide_mark();
+    });
+    //返回
+    //弹出是否删除照片
+    var ischeck = false;
+    $("#del_").click(function() {
+        if(!ischeck){
+            $("#news_mark").show();
+            var btnArray = ['否', '是'];
+            mui.confirm('是否删除这张照片？', '提示', btnArray, function(e) {
+                if (e.index == 1) {
+                    qd();
+                    ischeck = false;
+                } else {
+                    qx();
+                    ischeck = false;
+                }
+            });
+            ischeck = true;
+        }
+    });
+    //弹出是否删除照片
+    //取消
+    function qx(){
+        $("#news_mark").hide();
+    }
+    //取消
+    //确定
+    function qd(){
+        $("#news_mark").hide();
+        img_number--;
+        swiper.removeSlide(this_index);
+        var index_ = swiper.activeIndex;
+        var num = 0;
+        $("#file_imgs li").each(function() {
+            num++;
+            if(num == this_index + 1) {
+                $(this).remove();
+            }
+        });
+        if(img_number == 0) {
+            hide_mark();
+            $("#swi_number").html("0/0");
+        } else {
+            $("#swi_number").html((index_ + 1) + "/" + img_number);
+            this_index = index_;
+        }
+    }
+    //确定
+    //选择照相相册
+    $("#confirmBtn").click(function() {
+        $("#putImg").click();
+    });
+    //选择照相相册
+    //file选择图片 输入框监听
+    $("#putImg").change(function() {
+        inputFileOnChange();
+    });
+    function inputFileOnChange() {
+        var fileImg = document.getElementById('putImg');
+        imgPath.push($("#putImg").get(0).files[0]);
+        if(fileImg.files) {
+            //得到图片路径
+            var fileURL = window.URL.createObjectURL(fileImg.files[0]);
+            var str = '<li class="img"><img src="' + fileURL + '" /></li>';
+            var loop_str = '<div class="swiper-slide img"><img src="' + fileURL + '" /></div>';
+            $("#file_imgs").append(str);
+            $("#fileImg_loop").append(loop_str);
+            img_number++;
+            img_click();
+        }
+    }
+    //file选择图片 输入框监听
+    //弹出
+</script>
+</body>
+</html>

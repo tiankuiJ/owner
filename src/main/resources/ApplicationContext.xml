@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/tx
+http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+http://www.springframework.org/schema/aop
+http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+
+	<context:property-placeholder location="classpath:sysconfig_LOCAL.properties" />
+
+
+
+
+
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource"  destroy-method="shutdown">
+		<property name="jdbcUrl" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="driverClassName" value="${jdbc.driver}"/>
+		<!--&lt;!&ndash; 连接只读数据库时配置为true， 保证安全 &ndash;&gt;-->
+		<property name="readOnly" value="false" />
+		<!--&lt;!&ndash; 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQLException， 缺省:30秒 &ndash;&gt;-->
+		<property name="connectionTimeout" value="60000" />
+		<!--&lt;!&ndash; 一个连接idle状态的最大时长（毫秒），超时则被释放（retired），缺省:10分钟 &ndash;&gt;-->
+		<property name="idleTimeout" value="1740000" />
+		<!--&lt;!&ndash; 一个连接的生命时长（毫秒），超时而且没被使用则被释放（retired），缺省:30分钟，建议设置比数据库超时时长少30秒，参考MySQL wait_timeout参数（show variables like '%timeout%';） &ndash;&gt;-->
+		<property name="maxLifetime" value="5000" />
+		<!--&lt;!&ndash; 连接池中允许的最大连接数。缺省值：10；推荐的公式：((core_count * 2) + effective_spindle_count) &ndash;&gt;-->
+		<property name="maximumPoolSize" value="32" />
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!--dataSource属性指定要用到的连接池 -->
+		<property name="dataSource" ref="dataSource" />
+		<!--configLocation属性指定mybatis的核心配置文件 -->
+		<property name="configLocation" value="classpath:configuration.xml" />
+		<property name="mapperLocations" value="classpath:com/kafei/mapping/*.xml" />
+
+	</bean>
+
+
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+
+
+	<!-- 配置要扫描的包,可指定多个包，包与包之间用逗号或分号分隔 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.kafei.mapper" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+		<!-- 扫描特定后缀的类，默认Dao <property name="scanClassNameSuffix" value="Dao"/> -->
+	</bean>
+
+
+	<tx:annotation-driven transaction-manager="txManager" />
+	<context:component-scan base-package="com.kafei" />
+
+
+
+
+
+	 <!--<bean id="freeMarkerConfigurer"-->
+		<!--class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">-->
+		<!--<property name="templateLoaderPath" value="/WEB-INF/template/" />-->
+		<!--<property name="freemarkerSettings">-->
+			<!--<props>-->
+				<!--<prop key="default_encoding">utf-8</prop>-->
+			<!--</props>-->
+		<!--</property>-->
+	<!--</bean>-->
+</beans>

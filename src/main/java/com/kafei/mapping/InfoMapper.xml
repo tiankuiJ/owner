@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kafei.mapper.InfoMapper">
+    <resultMap id="BaseResultMap" type="com.kafei.vo.Info">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="activity_id" property="activityId" jdbcType="INTEGER"/>
+        <result column="stage_id" property="stageId" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="video" property="video" jdbcType="VARCHAR"/>
+        <result column="op" property="op" jdbcType="VARCHAR"/>
+        <result column="view_num" property="viewNum" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="oid" property="oid" jdbcType="INTEGER"/>
+        <result column="max_user" property="maxUser" jdbcType="INTEGER"/>
+        <result column="user_count" property="userCount" jdbcType="VARCHAR"/>
+        <result column="bjids" property="bjids" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="start_time" property="startTime" jdbcType="DATE"/>
+        <result column="end_time" property="endTime" jdbcType="DATE"/>
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.kafei.vo.Info" extends="BaseResultMap">
+        <result column="content" property="content" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, activity_id, stage_id, title, video, op, view_num, user_id, max_user, user_count,
+        create_time, status, start_time, end_time,oid,bjids
+    </sql>
+    <sql id="Blob_Column_List">
+        content
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from o_info
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <!--<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">-->
+        <!--DELETE FROM o_info-->
+        <!--WHERE id = #{id,jdbcType=INTEGER}-->
+    <!--</delete>-->
+    <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        update o_info set status='已删除' where id=#{id}
+    </update>
+
+    <insert id="insertSelective" parameterType="com.kafei.vo.Info" useGeneratedKeys="true" keyProperty="id">
+        insert into o_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="activityId != null">
+                activity_id,
+            </if>
+            <if test="stageId != null">
+                stage_id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="video != null">
+                video,
+            </if>
+            <if test="op != null">
+                op,
+            </if>
+            <if test="viewNum != null">
+                view_num,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="maxUser != null">
+                max_user,
+            </if>
+            <if test="userCount != null">
+                user_count,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="oid != null">
+                oid,
+            </if>
+            <if test="bjids != null">
+                bjids,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="activityId != null">
+                #{activityId,jdbcType=INTEGER},
+            </if>
+            <if test="stageId != null">
+                #{stageId,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="video != null">
+                #{video,jdbcType=VARCHAR},
+            </if>
+            <if test="op != null">
+                #{op,jdbcType=VARCHAR},
+            </if>
+            <if test="viewNum != null">
+                #{viewNum,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="maxUser != null">
+                #{maxUser,jdbcType=INTEGER},
+            </if>
+            <if test="userCount != null">
+                #{userCount,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="startTime != null">
+                #{startTime},
+            </if>
+            <if test="endTime != null">
+                #{endTime},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=LONGVARBINARY},
+            </if>
+            <if test="oid != null">
+                #{oid},
+            </if>
+            <if test="bjids != null">
+                #{bjids},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.kafei.vo.Info">
+        update o_info
+        <set>
+            <if test="activityId != null">
+                activity_id = #{activityId,jdbcType=INTEGER},
+            </if>
+            <if test="stageId != null">
+                stage_id = #{stageId,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="video != null">
+                video = #{video,jdbcType=VARCHAR},
+            </if>
+            <if test="op != null">
+                op = #{op,jdbcType=VARCHAR},
+            </if>
+            <if test="viewNum != null">
+                view_num = #{viewNum,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="maxUser != null">
+                max_user = #{maxUser,jdbcType=INTEGER},
+            </if>
+            <if test="userCount != null">
+                user_count = #{userCount,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=LONGVARBINARY},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="startTime != null">
+                start_time=#{startTime},
+            </if>
+            <if test="endTime != null">
+                end_time=#{endTime},
+            </if>
+            <if test="oid != null">
+                oid=#{oid},
+            </if>
+            <if test="bjids != null">
+                bjids=#{bjids},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectList" parameterType="info" resultType="info">
+        SELECT
+        a.id,
+        a.activity_id AS activityId,
+        a.stage_id AS stageId,
+        a.status,
+        a.title,
+        a.video,
+        a.bjids,
+        a.op,
+        a.oid,
+        a.view_num AS viewNum,
+        a.user_id AS userId,
+        a.max_user AS maxUser,
+        a.user_count AS userCount,
+        a.create_time AS createTime,
+        b.name AS stageName,
+        a.start_time AS startTime,
+        a.end_time AS endTime
+        FROM o_info a LEFT JOIN o_stage b ON a.stage_id = b.id
+        WHERE a.activity_id = #{activityId} AND a.status!='已删除'
+        <if test="searchStr!=null">
+            and concat(a.title, b.name) like concat('%',#{searchStr},'%')
+        </if>
+        <if test="startTime!=null">
+            <![CDATA[
+              and  a.start_time<=DATE_FORMAT(NOW(),"%Y-%m-%d") AND a.end_time>=DATE_FORMAT(NOW(),"%Y-%m-%d")
+               ]]>
+        </if>
+        ORDER BY a.create_time ASC
+    </select>
+
+    <select id="webSelectList" parameterType="info" resultType="info">
+        SELECT
+        a.id,
+        a.activity_id AS activityId,
+        a.stage_id AS stageId,
+        a.title,
+        a.video,
+        a.oid,
+        a.op,
+        a.create_time AS createTime,
+        b.name AS stageName,
+        a.start_time AS startTime,
+        a.end_time AS endTime
+        FROM o_info a LEFT JOIN o_stage b ON a.stage_id = b.id
+        WHERE a.activity_id = #{activityId} AND a.stage_id=#{stageId}  AND a.status!='已删除'
+        <if test="op!=null">
+            and a.op!='无'
+        </if>
+        <!--<if test="startTime!=null">-->
+            <!--<![CDATA[-->
+              <!--and  a.start_time<=DATE_FORMAT(NOW(),"%Y-%m-%d") AND a.end_time>=DATE_FORMAT(NOW(),"%Y-%m-%d")-->
+               <!--]]>-->
+        <!--</if>-->
+        ORDER BY a.create_time ASC
+    </select>
+
+</mapper>

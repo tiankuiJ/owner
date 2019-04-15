@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kafei.mapper.VoteRecordMapper">
+    <resultMap id="BaseResultMap" type="com.kafei.vo.VoteRecord">
+        <id column="ca_id" property="caId" jdbcType="INTEGER"/>
+        <id column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="vote_id" property="voteId" jdbcType="INTEGER"/>
+        <result column="choice" property="choice" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        ca_id, user_id, id, vote_id, choice, create_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.kafei.vo.VoteRecordKey">
+        select
+        <include refid="Base_Column_List"/>
+        from o_vote_record
+        where ca_id = #{caId,jdbcType=INTEGER}
+        and user_id = #{userId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.kafei.vo.VoteRecordKey">
+        DELETE FROM o_vote_record
+        WHERE ca_id = #{caId,jdbcType=INTEGER}
+              AND user_id = #{userId,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.kafei.vo.VoteRecord">
+        INSERT INTO o_vote_record (ca_id, user_id, id,
+                                   vote_id, choice, create_time
+        )
+        VALUES (#{caId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{id,jdbcType=INTEGER},
+                #{voteId,jdbcType=INTEGER}, #{choice,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.kafei.vo.VoteRecord">
+        insert into o_vote_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="caId != null">
+                ca_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="id != null">
+                id,
+            </if>
+            <if test="voteId != null">
+                vote_id,
+            </if>
+            <if test="choice != null">
+                choice,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="caId != null">
+                #{caId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="voteId != null">
+                #{voteId,jdbcType=INTEGER},
+            </if>
+            <if test="choice != null">
+                #{choice,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.kafei.vo.VoteRecord">
+        update o_vote_record
+        <set>
+            <if test="id != null">
+                id = #{id,jdbcType=INTEGER},
+            </if>
+            <if test="voteId != null">
+                vote_id = #{voteId,jdbcType=INTEGER},
+            </if>
+            <if test="choice != null">
+                choice = #{choice,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where ca_id = #{caId,jdbcType=INTEGER}
+        and user_id = #{userId,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.kafei.vo.VoteRecord">
+        UPDATE o_vote_record
+        SET id          = #{id,jdbcType=INTEGER},
+            vote_id     = #{voteId,jdbcType=INTEGER},
+            choice      = #{choice,jdbcType=VARCHAR},
+            create_time = #{createTime,jdbcType=TIMESTAMP}
+        WHERE ca_id = #{caId,jdbcType=INTEGER}
+              AND user_id = #{userId,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectList" parameterType="com.kafei.vo.VoteRecord" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from o_vote_record WHERE vote_id=#{voteId}
+    </select>
+
+    <select id="selectVoteRecordList" parameterType="java.lang.Integer" resultType="voteRecordBo">
+        SELECT
+            a.`name`,
+            a.img,
+            count(
+
+                    IF(b.choice = '同意', 1, NULL)
+            ) AS countAgreen,
+            count(
+
+                    IF(b.choice = '反对', 1, NULL)
+            ) AS countReject,
+            count(
+
+                    IF(b.choice = '弃权', 1, NULL)
+            ) AS countGiveUp,
+            sum(
+
+                    IF(
+                            b.choice = '同意',
+                            c.acreage,
+                            NULL
+                    )
+            ) AS sumAgreen,
+            sum(
+
+                    IF(
+                            b.choice = '反对',
+                            c.acreage,
+                            NULL
+                    )
+            ) AS sumReject,
+            sum(
+
+                    IF(
+                            b.choice = '弃权',
+                            c.acreage,
+                            NULL
+                    )
+            ) AS sumGiveUp
+        FROM
+            o_candidate a,
+            o_vote_record b,
+            o_owner c
+        WHERE
+            a.id = b.ca_id
+            AND b.user_id = c.id
+            AND b.vote_id = #{voteId}
+        GROUP BY
+            b.ca_id
+    </select>
+
+    <select id="selectVoteRecordListNoPage" parameterType="java.lang.Integer" resultType="voteRecordBo">
+        SELECT
+        a.`name`,
+        a.img,
+        count(
+
+        IF(b.choice = '同意', 1, NULL)
+        ) AS countAgreen,
+        count(
+
+        IF(b.choice = '反对', 1, NULL)
+        ) AS countReject,
+        count(
+
+        IF(b.choice = '弃权', 1, NULL)
+        ) AS countGiveUp,
+        sum(
+
+        IF(
+        b.choice = '同意',
+        c.acreage,
+        NULL
+        )
+        ) AS sumAgreen,
+        sum(
+
+        IF(
+        b.choice = '反对',
+        c.acreage,
+        NULL
+        )
+        ) AS sumReject,
+        sum(
+
+        IF(
+        b.choice = '弃权',
+        c.acreage,
+        NULL
+        )
+        ) AS sumGiveUp
+        FROM
+        o_candidate a,
+        o_vote_record b,
+        o_owner c
+        WHERE
+        a.id = b.ca_id
+        AND b.user_id = c.id
+        AND b.vote_id = #{voteId}
+        GROUP BY
+        b.ca_id
+        ORDER BY countAgreen DESC
+    </select>
+
+    <insert id="insertBatch" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            INSERT  INTO o_vote_record(user_id,choice,vote_id,ca_id) VALUE (#{item.userId},#{item.choice},#{item.voteId},#{item.caId})
+        </foreach>
+    </insert>
+
+    <select id="sumAcreageByUserIds" parameterType="java.util.List" resultType="java.lang.Double">
+        SELECT  sum(acreage) from o_owner WHERE id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

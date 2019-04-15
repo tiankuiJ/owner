@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kafei.mapper.RegRecordMapper">
+    <resultMap id="BaseResultMap" type="com.kafei.vo.RegRecord">
+        <id column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <id column="op_id" property="opId" jdbcType="VARCHAR"/>
+        <result column="info_id" property="infoId" jdbcType="INTEGER"/>
+        <result column="id" property="id" jdbcType="INTEGER"/>
+        <result column="choice" property="choice" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="imgs" property="imgs" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        user_id, info_id, id, choice, content, imgs, create_time, op_id
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.kafei.vo.RegRecord">
+        select
+        <include refid="Base_Column_List"/>
+        from o_reg_record
+        where user_id = #{userId,jdbcType=VARCHAR}
+        and op_id = #{opId,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.kafei.vo.RegRecordKey">
+        DELETE FROM o_reg_record
+        WHERE user_id = #{userId,jdbcType=VARCHAR}
+              AND op_id = #{opId,jdbcType=INTEGER}
+    </delete>
+    <insert id="insertSelective" parameterType="com.kafei.vo.RegRecord">
+        insert into o_reg_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="infoId != null">
+                info_id,
+            </if>
+            <if test="opId != null">
+                op_id,
+            </if>
+            <if test="id != null">
+                id,
+            </if>
+            <if test="choice != null">
+                choice,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="imgs != null">
+                imgs,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="infoId != null">
+                #{infoId,jdbcType=INTEGER},
+            </if>
+            <if test="opId != null">
+                #{opId},
+            </if>
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="choice != null">
+                #{choice,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="imgs != null">
+                #{imgs,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.kafei.vo.RegRecord">
+        update o_reg_record
+        <set>
+            <if test="id != null">
+                id = #{id,jdbcType=INTEGER},
+            </if>
+            <if test="choice != null">
+                choice = #{choice,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="imgs != null">
+                imgs = #{imgs,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where user_id = #{userId,jdbcType=VARCHAR}
+        and info_id = #{infoId,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectList" parameterType="regRecord" resultType="regRecord">
+        SELECT
+        a.user_id AS userId,
+        a.info_id AS infoId,
+        a.op_id AS opId,
+        b.phone AS ownerPhone,
+        b.acreage,
+        a.id,
+        a.choice,
+        a.create_time AS createTime,
+        b.name AS ownerName
+        FROM o_reg_record a, o_owner b WHERE a.user_id = b.id
+        <if test="infoId!=null">
+            AND a.info_id = #{infoId}
+        </if>
+        <if test="opId!=null">
+            AND a.op_id = #{opId}
+        </if>
+
+        <if test="userId!=null">
+            and b.id=#{userId}
+        </if>
+        <if test="searchStr!=null">
+            and concat(b.name, b.phone) like concat('%',#{searchStr},'%')
+        </if>
+    </select>
+
+    <select id="selectSumAcreageByInfo" parameterType="java.lang.Integer" resultType="java.lang.Double">
+        SELECT sum(b.acreage) AS sum
+        FROM o_reg_record a, o_owner b
+        WHERE a.user_id = b.id
+        <if test="infoId!=null">
+            AND a.info_id = #{infoId}
+        </if>
+        <if test="opId!=null">
+            AND a.op_id = #{opId}
+        </if>
+    </select>
+
+    <select id="selectAcreageBiaoJue" parameterType="regRecord" resultType="regRecord">
+        SELECT
+        SUM(b.acreage) AS acreage,
+        a.choice AS choice
+        FROM
+        o_reg_record a,
+        o_owner b
+        WHERE
+
+        a.user_id = b.id
+        <if test="infoId!=null">
+            AND a.info_id = #{infoId}
+        </if>
+        <if test="opId!=null">
+            AND a.op_id = #{opId}
+        </if>
+        GROUP BY
+        a.choice
+    </select>
+
+    <select id="selectBioaJueUserCount" parameterType="regRecord" resultType="biaojueUserCountBo">
+        SELECT
+            count(if(a.choice='同意',1,null)) AS agreenUserCount,
+            count(if(a.choice='反对',1,null)) AS rejectUserCount,
+            count(if(a.choice='弃权',1,null)) AS giveUpUserCount,
+            count(id) AS userCount
+        FROM
+            o_reg_record a
+        WHERE
+            a.op_id=#{opId}
+
+    </select>
+
+
+</mapper>

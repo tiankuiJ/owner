@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kafei.mapper.AdMapper">
+    <resultMap id="BaseResultMap" type="com.kafei.vo.Ad">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="org_id" property="orgId" jdbcType="INTEGER"/>
+        <result column="weight" property="weight" jdbcType="INTEGER"/>
+        <result column="position" property="position" jdbcType="VARCHAR"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="img" property="img" jdbcType="VARCHAR"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="start_time" property="startTime" jdbcType="DATE"/>
+        <result column="end_time" property="endTime" jdbcType="DATE"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, position, img, url, status, create_time, org_id, start_time, end_time, title, weight
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from o_ad
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM o_ad
+        WHERE id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insertSelective" parameterType="com.kafei.vo.Ad">
+        insert into o_ad
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="position != null">
+                position,
+            </if>
+            <if test="img != null">
+                img,
+            </if>
+            <if test="url != null">
+                url,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="orgId != null">
+                org_id,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="weight != null">
+                weight,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="position != null">
+                #{position,jdbcType=VARCHAR},
+            </if>
+            <if test="img != null">
+                #{img,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null">
+                #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgId != null">
+                #{orgId},
+            </if>
+            <if test="startTime != null">
+                #{startTime},
+            </if>
+            <if test="endTime != null">
+                #{endTime},
+            </if>
+            <if test="title != null">
+                #{title},
+            </if>
+            <if test="weight != null">
+                #{weight},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.kafei.vo.Ad">
+        update o_ad
+        <set>
+            <if test="position != null">
+                position = #{position,jdbcType=VARCHAR},
+            </if>
+            <if test="img != null">
+                img = #{img,jdbcType=VARCHAR},
+            </if>
+            <if test="url != null">
+                url = #{url,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="orgId != null">
+                org_id=#{orgId},
+            </if>
+            <if test="startTime != null">
+                start_time=#{startTime},
+            </if>
+            <if test="endTime != null">
+                end_time=#{endTime},
+            </if>
+            <if test="title != null">
+                title=#{title},
+            </if>
+            <if test="weight != null">
+                weight=#{weight},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectList" parameterType="ad" resultType="ad">
+        SELECT
+        a.id,
+        a.title,
+        a.img,
+        a.position,
+        a.weight,
+        a.create_time AS createTime,
+        a.end_time AS endTime,
+        a.start_time AS startTime,
+        a.url
+        from o_ad a LEFT JOIN o_org b ON a.org_id=b.id
+        <where>
+            <if test="childOrg==null and orgId!=null">
+                and a.org_id=#{orgId}
+            </if>
+            <if test="childOrg!=null and orgId!=null">
+                and (a.org_id in
+                <foreach collection="childOrg" item="item" open="(" separator="," close=")">
+                    #{item.id}
+                </foreach>
+                or a.org_id=#{orgId}
+                )
+            </if>
+            <if test="searchStr!=null">
+                and concat(a.title,a.url,a.position) like concat('%',#{searchStr},'%')
+            </if>
+        </where>
+        ORDER BY a.weight DESC
+    </select>
+
+    <select id="webSelectList" parameterType="ad" resultType="ad">
+        SELECT
+        a.id,
+        a.title,
+        a.img,
+        a.position,
+        a.weight,
+        a.url
+        from o_ad a
+        WHERE a.org_id=#{orgId}
+        <![CDATA[
+    AND start_time<=DATE_FORMAT(NOW(),"%Y-%m-%d") AND end_time>=DATE_FORMAT(NOW(),"%Y-%m-%d")
+    ]]>
+        <if test="position!=null">
+         and   a.position=#{position}
+        </if>
+        ORDER BY a.weight DESC
+    </select>
+</mapper>

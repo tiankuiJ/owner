@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kafei.mapper.OrgMapper">
+    <resultMap id="BaseResultMap" type="com.kafei.vo.Org">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="p_id" property="pId" jdbcType="INTEGER"/>
+        <result column="area_id" property="areaId" jdbcType="INTEGER"/>
+        <result column="areaName" property="areaName" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="CHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="tel" property="tel" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, name, type, address, tel, create_time, p_id,area_id
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from o_org
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM o_org
+        WHERE id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insertSelective" parameterType="com.kafei.vo.Org">
+        insert into o_org
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                name,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="tel != null">
+                tel,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="pId != null">
+                p_id,
+            </if>
+            <if test="areaId != null">
+                area_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=CHAR},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="tel != null">
+                #{tel,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="pId != null">
+                #{pId},
+            </if>
+            <if test="areaId != null">
+                #{areaId},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.kafei.vo.Org">
+        update o_org
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=CHAR},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="tel != null">
+                tel = #{tel,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="pId != null">
+                p_id=#{pId},
+            </if>
+            <if test="areaId != null">
+                area_id = #{areaId},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectSheQu" parameterType="org" resultMap="BaseResultMap">
+        SELECT
+        a.id, a.name, a.type, a.address, a.tel, a.create_time, a.p_id,a.area_id,b.name AS areaName
+        FROM o_org a,o_prov_city_area b WHERE a.area_id=b.code AND a.type="社区"
+        <if test="id!=null">
+            and a.id=#{id}
+        </if>
+        <if test="areaCode!=null">
+            and b.code=#{areaCode}
+        </if>
+        <if test="searchStr!=null">
+            and concat(a.name,b.name) like concat('%',#{searchStr},'%')
+        </if>
+    </select>
+
+    <select id="selectXiaoQu" parameterType="org" resultType="org">
+        SELECT
+            a.id,
+            a.name,
+            a.type,
+            a.address,
+            a.tel,
+            a.create_time AS createTime,
+            a.p_id        AS pId,
+            b.name        AS pName,
+        c.name AS  areaName
+        FROM o_org a, o_org b,o_prov_city_area c
+        WHERE a.p_id = b.id AND a.area_id=c.code
+        <if test="pId!=null">
+            and a.p_id=#{pId}
+        </if>
+        <if test="id!=null">
+            and a.id=#{id}
+        </if>
+        <if test="searchStr!=null">
+            and concat(a.name,c.name) like concat('%',#{searchStr},'%')
+        </if>
+    </select>
+
+
+    <select id="selectIdsByPid" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        SELECT id from o_org WHERE  p_id=#{pId}
+    </select>
+</mapper>

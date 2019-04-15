@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kafei.mapper.RegionMapper" >
+  <resultMap id="BaseResultMap" type="com.kafei.vo.Region" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="code" property="code" jdbcType="BIGINT" />
+    <result column="parentId" property="parentid" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="INTEGER" />
+    <result column="childSize" property="childSize" jdbcType="INTEGER"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    a.id, a.code, a.parentId, a.name, a.level
+  </sql>
+  <select id="getAll" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from o_prov_city_area a order by a.parentId desc,a.level desc
+  </select>
+  <select id="getListByPid" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  	 select 
+     <include refid="Base_Column_List" />,
+     (SELECT COUNT(id) FROM o_prov_city_area WHERE parentId = a.`code`) as childSize
+ 	FROM o_prov_city_area a where a.parentId=#{pid}
+  </select>
+  <select id="getListByPidWithSelf" parameterType="java.lang.Long" resultMap="BaseResultMap">
+  	 select 
+     <include refid="Base_Column_List" />,
+     (SELECT COUNT(id) FROM o_prov_city_area WHERE parentId = a.`code`) as childSize
+ 	FROM o_prov_city_area a
+ 	where a.parentId=#{pid} or a.code=#{pid}
+  </select>
+  <select id="getNameById" parameterType="java.lang.Long" resultType="java.lang.String">
+  	select name from o_prov_city_area where `code`=#{id}
+  </select>
+</mapper>

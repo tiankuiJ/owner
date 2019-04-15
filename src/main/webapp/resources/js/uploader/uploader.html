@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="css/uploader.css" />
+	</head>
+
+	<body>
+		<div style="margin-top: 100px;border-top: 1px solid #CCCCCC;padding: 20px;">
+
+			<a href="javascript:void(this);" id="popupShow" style="display: inline-block;text-decoration: none;color: #AAAAAA;padding: 10px 20px;text-align: center;">点击上传</a>
+			<img src="" id="img1"/>
+			<div id="list1">
+			</div>
+
+			<form id="upload_form" enctype="multipart/form-data" method="post">
+				<input type="file" accept="image/*"  name="image_file" style="display: none;" id="image_file" onchange="fileSelected(this,'list1','upload_form','img1','image');" />
+			</form>
+
+
+			<a href="javascript:void(this);" id="popupShow2" style="display: inline-block;text-decoration: none;color: #AAAAAA;padding: 10px 20px;text-align: center;">点击上传</a>
+		
+		<img src="" id="img2"/>
+			
+			<div id="list2">
+			</div>
+			<form id="upload_form2" enctype="multipart/form-data" method="post">
+				<input type="file" accept="video/*" name="image_file2" style="display: none;" id="image_file2" onchange="fileSelected(this,'list2','upload_form2','img2','media');" />
+			</form>
+		</div>
+		<ul class="upload_list_">
+			<li>
+				<div class="upload_listImg">
+					<img src="img/uploader_img.png" />
+				</div>
+				<textarea numId="1"></textarea>
+				<a href="javascript:void(this);"></a>
+				<span id="load_Number1">0/255</span>
+				<div class="clear">
+				</div>
+			</li>
+			<li>
+				<div class="upload_listImg">
+					<img src="img/uploader_img.png" />
+				</div>
+				<textarea numId="2"></textarea>
+				<a href="javascript:void(this);"></a>
+				<span id="load_Number2">0/255</span>
+				<div class="clear">
+				</div>
+			</li>
+		</ul>
+		<script src="js/jquery-1.10.2.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/uploader.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$("#popupShow").click(function() {
+				$("#image_file").click();
+			});
+			
+			$("#popupShow2").click(function() {
+				$("#image_file2").click();
+			});
+			
+			
+			//
+			$(".upload_list_ li a").each(function() {
+				$(this).click(function() {
+					$(this).parent().remove();
+				});
+			});
+			
+			$(".upload_list_ li textarea").each(function() {
+				$(this).on("input propertychange", function() {
+					var numId = this.getAttribute("numId");
+					if($(this).val().length > 255) {
+						$(this).val($(this).val().substring(0, 255));
+					} else {
+						$("#load_Number" + numId).html($(this).val().length + "/255");
+					}
+				});
+			});
+		</script>
+	</body>
+
+</html>
