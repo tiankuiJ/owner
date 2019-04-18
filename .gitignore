@@ -26,3 +26,5 @@ hs_err_pid*
 target
 .idea
 *.properties
+!config-client-dev.properties
+!config-server-dev.properties
