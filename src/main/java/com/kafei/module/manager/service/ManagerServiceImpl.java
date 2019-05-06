@@ -9,6 +9,8 @@ import com.kafei.util.AESUtil;
 import com.kafei.vo.Manager;
 import com.kafei.vo.Owner;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -16,18 +18,23 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
-public class ManagerServiceImpl implements ManagerService{
+public class ManagerServiceImpl implements ManagerService {
     @Autowired
     private ManagerMapper managerMapper;
 
@@ -45,7 +52,7 @@ public class ManagerServiceImpl implements ManagerService{
         record.setPsd("123456");
         Manager temp = new Manager();
         temp.setAccount(record.getAccount());
-        if(selectList(temp).size()!=0){//已经存在该账户
+        if (selectList(temp).size() != 0) {//已经存在该账户
             return -1;
         }
         try {
@@ -73,7 +80,7 @@ public class ManagerServiceImpl implements ManagerService{
             manager.setPsd(AESUtil.getInstance().encrypt(manager.getPsd()));
             manager = managerMapper.login(manager);
             return manager;
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -91,7 +98,7 @@ public class ManagerServiceImpl implements ManagerService{
     @Override
     public int insertOwner(Owner owner) {
         List<Owner> list = ownerMapper.selectList(new Owner(owner.getPhone()));
-        if(list.size()>0)
+        if (list.size() > 0)
             return -1;
 //        try {
 //            owner.setPsd(AESUtil.getInstance().encrypt("123456"));
@@ -104,200 +111,193 @@ public class ManagerServiceImpl implements ManagerService{
 
     @Override
     public int updateOwner(Owner owner) {
-        if(owner.getOldPhone().equals(owner.getPhone())){
+        if (owner.getOldPhone().equals(owner.getPhone())) {
             owner.setOldPhone(null);
             return ownerMapper.updateByPrimaryKeySelective(owner);
         }
         List<Owner> list = ownerMapper.selectList(new Owner(owner.getPhone()));
-        if(list.size()>0)
+        if (list.size() > 0)
             return -1;
         return ownerMapper.updateByPrimaryKeySelective(owner);
     }
 
 
-    private final static String excel2003L =".xls";    //2003- 版本的excel
-    private final static String excel2007U =".xlsx";   //2007+ 版本的excel
-    public Workbook getWorkbook(InputStream inStr, String fileName) throws Exception{
+    private final static String excel2003L = ".xls";    //2003- 版本的excel
+    private final static String excel2007U = ".xlsx";   //2007+ 版本的excel
+
+    public Workbook getWorkbook(InputStream inStr, String fileName) throws Exception {
         Workbook wb = null;
         String fileType = fileName.substring(fileName.lastIndexOf("."));
-        if(excel2003L.equals(fileType)){
+        if (excel2003L.equals(fileType)) {
             wb = new HSSFWorkbook(inStr);  //2003-
-        }else if(excel2007U.equals(fileType)){
+        } else if (excel2007U.equals(fileType)) {
             wb = new XSSFWorkbook(inStr);  //2007+
-        }else{
+        } else {
             throw new Exception("解析的文件格式有误！");
         }
         return wb;
     }
-
+    @Autowired
+    private DataSourceTransactionManager transactionManager;
     @Override
-    @Transactional
-    public JSONObject importOwner(InputStream in, String fileName,Integer orgId){
+//    @Transactional
+    public JSONObject importOwner(InputStream in, String fileName, Integer orgId) {
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        TransactionStatus status = transactionManager.getTransaction(def); // 获得事务状态
         JSONObject result = new JSONObject();
         List<Object> list = null;
-        JSONObject robj = new JSONObject();
         List<ErrorObj> errors = new ArrayList<>();
-//        String[] attrs = new String[]{"name","sex","psd","phone","job","birth","whcd","zzmm","position","remark"};
-        String[] attrs = new String[]{"position","name","acreage","phone","phonet","psd","remark"};
+        String[] attrs = new String[]{"position", "name", "phone", "phonet", "acreage","psd", "remark"};
 
         //创建Excel工作薄
         try {
-            Workbook work = this.getWorkbook(in,fileName);
-            if(null == work){
+            Workbook work = this.getWorkbook(in, fileName);
+            if (null == work) {
                 throw new Exception("创建Excel工作薄为空！");
             }
             Sheet sheet = null;
             Row row = null;
             Cell cell = null;
             list = new ArrayList<>();
-            //遍历Excel中所有的sheet
-            DecimalFormat df = new DecimalFormat("0");  //格式化number String字符
-            SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd");  //日期格式化
-            DecimalFormat df2 = new DecimalFormat("0.00");  //格式化数字
             for (int i = 0; i < work.getNumberOfSheets(); i++) {
                 sheet = work.getSheetAt(i);
-                if(sheet==null){continue;}
+                if (sheet == null) {
+                    continue;
+                }
 
                 //遍历当前sheet中的所有行
-                for (int j = sheet.getFirstRowNum()+1; j < sheet.getLastRowNum()+1; j++) {
+                System.out.println(sheet.getLastRowNum()+"!!");
+                for (int j = sheet.getFirstRowNum() + 1; j < sheet.getLastRowNum() + 1; j++) {
                     row = sheet.getRow(j);
-                    if(row==null||row.getFirstCellNum()==j){
+                    if (row == null || row.getFirstCellNum() == j) {
+                        System.out.println(j+"???");
                         continue;
                     }
 
-                    //遍历所有的列
                     JSONObject ownerObj = new JSONObject();
-                    ownerObj.put("orgId",orgId);
-//                    if(row.getLastCellNum()<7){
-//                        ErrorObj errorObj = new ErrorObj();
-//                        errorObj.setErrorRowIndex((j+""));
-//                        errorObj.setErrorContent("请把信息输入完整");
-//                        errors.add(errorObj);
-//                    }
+                    ownerObj.put("orgId", orgId);
+                    //遍历所有的列
                     for (int y = row.getFirstCellNum(); y < row.getLastCellNum(); y++) {
                         cell = row.getCell(y);
-                        Object value = null;
+//                        if(cell==null){
+//                            System.out.println(sheet.getSheetName()+j+"|"+y);
+//                            break;
+//                        }
                         Owner owner;
-                        if(cell==null){
-                            ownerObj.put(attrs[y],null);
-                            if(y==5){
-                                ErrorObj errorObj = new ErrorObj();
-                                errorObj.setErrorRowIndex((j+""));
-                                errorObj.setErrorContent("身份证号码不能为空");
-                                errors.add(errorObj);
-                            }
-                            if(y==3){
-                                ErrorObj errorObj = new ErrorObj();
-                                errorObj.setErrorRowIndex((j+""));
-                                errorObj.setErrorContent("电话号码不能为空");
-                                errors.add(errorObj);
-                            }
-                            if(y==2){
-                                ErrorObj errorObj = new ErrorObj();
-                                errorObj.setErrorRowIndex((j+""));
-                                errorObj.setErrorContent("面积不能为空");
-                                errors.add(errorObj);
-                            }
-                            continue;
+                        if (StringUtils.isBlank(getCellValueToString(cell)) && y!=3 && y!=6 ) {
+                            ErrorObj errorObj = new ErrorObj();
+                            errorObj.setErrorRowIndex((sheet.getSheetName()+"|"+(j+1) + ""));
+                            errorObj.setErrorContent("请填入完整的信息");
+                            errors.add(errorObj);
+                            break;
                         }
-                        if(cell.getColumnIndex()==2){
+                        if (cell.getColumnIndex() == 2) {
                             try {
-                                if(Long.parseLong(df.format(row.getCell(y+1).getNumericCellValue()))==0L){
+                                owner = new Owner(Long.parseLong(getCellValueToString(row.getCell(y))));
+                                if (ownerMapper.selectList(owner).size() > 0) {
                                     ErrorObj errorObj = new ErrorObj();
-                                    errorObj.setErrorRowIndex((j+""));
-                                    errorObj.setErrorContent("电话号码不能为空");
-                                    errors.add(errorObj);
-                                    continue;
-                                }
-                                owner = new Owner(Long.parseLong(df.format(row.getCell(y+1).getNumericCellValue())));
-                                if(ownerMapper.selectList(owner).size()>0){
-                                    ErrorObj errorObj = new ErrorObj();
-                                    errorObj.setErrorRowIndex((j+""));
+                                    errorObj.setErrorRowIndex((sheet.getSheetName()+"|"+(j+1) + ""));
                                     errorObj.setErrorContent("手机号重复");
                                     errors.add(errorObj);
-                                    continue;
+                                    break;
                                 }
                                 owner.setPhone(null);
-                                owner.setPsd(row.getCell(5).getRichStringCellValue().getString());
-                                if(StringUtils.isBlank(owner.getPsd())){
+                                owner.setPsd(getCellValueToString(row.getCell(5)));
+                                if (StringUtils.isBlank(owner.getPsd())) {
                                     ErrorObj errorObj = new ErrorObj();
-                                    errorObj.setErrorRowIndex((j+""));
+                                    errorObj.setErrorRowIndex((sheet.getSheetName()+"|"+(j+1) + ""));
                                     errorObj.setErrorContent("身份证号码不能为空");
                                     errors.add(errorObj);
-                                    continue;
+                                    break;
                                 }
-                                if(ownerMapper.selectList(owner).size()>0){
+                                if (ownerMapper.selectList(owner).size() > 0) {
                                     ErrorObj errorObj = new ErrorObj();
-                                    errorObj.setErrorRowIndex((j+""));
+                                    errorObj.setErrorRowIndex((sheet.getSheetName()+"|"+(j+1) + ""));
                                     errorObj.setErrorContent("身份证号码重复");
                                     errors.add(errorObj);
-                                    continue;
+                                    break;
                                 }
-                            }catch (Exception e){
+                            } catch (Exception e) {
                                 ErrorObj errorObj = new ErrorObj();
-                                errorObj.setErrorRowIndex((j+""));
+                                errorObj.setErrorRowIndex((sheet.getSheetName()+"|"+(j+1) + ""));
                                 errorObj.setErrorContent("手机号格式错误");
                                 errors.add(errorObj);
-                                continue;
+                                break;
                             }
-
-                        }
-                        switch (cell.getCellType()) {
-                            case Cell.CELL_TYPE_STRING:
-                                value = cell.getRichStringCellValue().getString();
+                            try {
+                                Double.parseDouble(getCellValueToString(row.getCell(4)));
+                            } catch (Exception e) {
+                                ErrorObj errorObj = new ErrorObj();
+                                errorObj.setErrorRowIndex((sheet.getSheetName()+"|"+(j+1) + ""));
+                                errorObj.setErrorContent("面积格式错误");
+                                errors.add(errorObj);
                                 break;
-                            case Cell.CELL_TYPE_NUMERIC:
-                                if("General".equals(cell.getCellStyle().getDataFormatString())){
-                                    value = df.format(cell.getNumericCellValue());
-                                }else if("m/d/yy".equals(cell.getCellStyle().getDataFormatString())){
-                                    value = sdf.format(cell.getDateCellValue());
-                                }else{
-                                    value = df2.format(cell.getNumericCellValue());
-                                }
-                                break;
-                            case Cell.CELL_TYPE_BOOLEAN:
-                                value = cell.getBooleanCellValue();
-                                break;
-                            case Cell.CELL_TYPE_BLANK:
-                                value = "";
-                                break;
-                            default:
-                                break;
-                        }
-                        try {
-                            if(cell.getColumnIndex()==2){
-                                Double.parseDouble(df2.format(cell.getNumericCellValue()));
                             }
-                        }catch (Exception e){
-                            ErrorObj errorObj = new ErrorObj();
-                            errorObj.setErrorRowIndex((j+""));
-                            errorObj.setErrorContent("面积不能为空或格式错误");
-                            errors.add(errorObj);
-                            continue;
                         }
-
-                        ownerObj.put(attrs[y],value);
+                        ownerObj.put(attrs[y], getCellValueToString(cell));
+                        if (cell.getColumnIndex() == 6) {
+                            list.add(ownerObj);
+                        }
                     }
-                    list.add(ownerObj);
+
                 }
             }
-            System.out.println(JSON.toJSONString(errors));
+            result.put("owners", list);
             System.out.println(JSON.toJSONString(list));
-            result.put("owners",list);
-            result.put("errors",errors);
-            if(result.get("errors").toString().length()<3){
-                ArrayList<Owner> records = JSON.parseObject(result.get("owners").toString(), new TypeReference<ArrayList<Owner>>() {});
+            result.put("errors", errors);
+            if (result.get("errors").toString().length() < 3) {
+                ArrayList<Owner> records = JSON.parseObject(result.get("owners").toString(), new TypeReference<ArrayList<Owner>>() {
+                });
                 ownerMapper.insertBatch(records);
+                transactionManager.commit(status);
+            } else {
+                transactionManager.rollback(status);
             }
             return result;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
+            transactionManager.rollback(status);
             return null;
         }
     }
 
+    private static String getCellValueToString(Cell cell) {
+        String strCell = "";
+        String pattern = "yyyy-MM-dd";
+        if (cell == null) {
+            return null;
+        }
+        switch (cell.getCellType()) {
+            case Cell.CELL_TYPE_BOOLEAN:
+                strCell = String.valueOf(cell.getBooleanCellValue());
+                break;
+            case Cell.CELL_TYPE_NUMERIC:
+                if (HSSFDateUtil.isCellDateFormatted(cell)) {
+                    Date date = cell.getDateCellValue();
+                    if (pattern != null) {
+                        SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+                        strCell = sdf.format(date);
+                    } else {
+                        strCell = date.toString();
+                    }
+                    break;
+                }
+                // 不是日期格式，则防止当数字过长时以科学计数法显示
+                cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+                strCell = cell.toString();
+                break;
+            case Cell.CELL_TYPE_STRING:
+                strCell = cell.getStringCellValue();
+                break;
+            default:
+                break;
+        }
+        return strCell;
+    }
 
-    class ErrorObj{
+
+    class ErrorObj {
         private String errorRowIndex;
 
         private String errorContent;

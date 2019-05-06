@@ -220,7 +220,7 @@
                         <label class="control-label col-sm-2 no-padding-right">格式</label>
                         <div class="col-sm-9">
                             <div class="clearfix">
-                                <label class="control-label" style="text-align: left;">请按照 <span style="color: red;">姓名、性别、身份证号、电话、职业、出生年月、文化程度、政治面貌、专有部分座落、专有部分面积</span> 的顺序上传业主数据，顺序错误可能会导致数据导入失败，支持xls格式和xlsx格式。（日期格式：年/月/日 或 年-月-日）</label>
+                                <label class="control-label" style="text-align: left;">请按照 <span style="color: red;">专有部分座落、业主姓名、手机号码、手机号码2、专有部分面积总和、身份证号码、备注</span> 的顺序上传业主数据，顺序错误可能会导致数据导入失败，支持xls格式和xlsx格式。（日期格式：年/月/日 或 年-月-日）</label>
                                 <a href="#" onclick="javascript:window.open('${pageContext.request.contextPath }/resources/file/业主导入模板.xlsx')">点击下载模板</a>
                             </div>
                         </div>
@@ -267,11 +267,12 @@
         url:sys.rootPath+'/selectOwnerList.action',
         datatype: "json",
         mtype:"GET",
-        colNames:['ID','','','姓名','性别','电话','职业','出生年月','文化程度','政治面貌','专有部分座落','专有部分面积','添加时间','操作'],
+        colNames:['ID','','','','姓名','性别','电话','职业','出生年月','文化程度','政治面貌','专有部分座落','专有部分面积','添加时间','操作'],
         colModel:[
             {name:'id',index:'id',key:true,width:1,align:'center'},
             {name:'psd',hidden:true,width:1,align:'center'},
             {name:'orgId',hidden:true,width:1,align:'center'},
+            {name:'remark',hidden:true,width:1,align:'center'},
             {name:'name', sortable:false,width:2,align:'center'},
             {name:'sex',sortable:false,width:1,align:'center'},
             {name:'phone',sortable:false,width:1},
@@ -321,6 +322,7 @@
         $("#zzmm").val($("#jsonmap").jqGrid('getCell',id,'zzmm'));
         $("#position").val($("#jsonmap").jqGrid('getCell',id,'position'));
         $("#acreage").val($("#jsonmap").jqGrid('getCell',id,'acreage'));
+        $("#remark").val($("#jsonmap").jqGrid('getCell',id,'remark'));
         $('#infoModal').modal('show');
     }
 
@@ -471,7 +473,7 @@
                     var content="";
                     var errorData = returndata.data;
                     for(var i=0;i<errorData.length;i++){
-                        content+="<p>错误行数:"+(parseInt(errorData[i].errorRowIndex)+1)+"&nbsp;&nbsp;&nbsp;&nbsp;错误原因:"+errorData[i].errorContent+"</p>";
+                        content+="<p>错误行数:"+((errorData[i].errorRowIndex))+"&nbsp;&nbsp;&nbsp;&nbsp;错误原因:"+errorData[i].errorContent+"</p>";
                     }
                     layer.open({
                         content: content

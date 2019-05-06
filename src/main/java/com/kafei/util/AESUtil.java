@@ -6,6 +6,7 @@ import sun.misc.BASE64Encoder;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.math.BigDecimal;
 import java.net.URL;
 
 public class AESUtil {
@@ -65,12 +66,15 @@ public class AESUtil {
 	}
 
 	public static void main(String[] args) throws Exception {
-		System.out.println(AESUtil.getInstance().decrypt("YYAwP+m3mlm/wIYQ3slpfw=="));
-		System.out.println(AESUtil.getInstance().encrypt("123455"));
-		String a = "http://localhost:8080/files/EC3DFDCB4E361.jpg";
+//		System.out.println(AESUtil.getInstance().decrypt("/o4Xso1dtVGZM0/BFv2jPg=="));
+//		System.out.println(AESUtil.getInstance().encrypt("123455"));
+//		String a = "http://localhost:8080/files/EC3DFDCB4E361.jpg";
 //		System.out.println(a.lastIndexOf("/")+1);//获取到文件名称);
-//		int i=2;
-//		int j=2*-1;
-//		System.out.println(i+j);
+		Double d = 1.0;
+		Double d1 = 0.9;
+		String str = Double.toString(0.1000000000000000055511151231257827021181583404541015625);
+//		System.out.println((new BigDecimal(d.toString()).subtract(new BigDecimal(d1.toString()))).doubleValue());
+		System.out.println(new BigDecimal(
+				str).toString());// 0.1
 	}
 }
