@@ -15,15 +15,15 @@
                 </select>
             </div>
             <div class="col-xs-3">
-                <button class="btn btn-xs btn-success" type="button" onclick="add()">
-                    <i class="ace-icon glyphicon glyphicon-plus"></i>添加
-                </button>
+                <%--<button class="btn btn-xs btn-success" type="button" onclick="add()">--%>
+                    <%--<i class="ace-icon glyphicon glyphicon-plus"></i>添加--%>
+                <%--</button>--%>
                 <button class="btn btn-sm btn_" type="button" onclick="javascript:$('#importModal').modal('show');">
                     <i class="ace-icon fa fa-folder-open"></i>导入
                 </button>
-                <button class="btn-sm  btn_" type="button" onclick="backOrg()">
-                    <i class="ace-icon glyphicon glyphicon-backward"></i>返回
-                </button>
+                <%--<button class="btn-sm  btn_" type="button" onclick="backOrg()">--%>
+                    <%--<i class="ace-icon glyphicon glyphicon-backward"></i>返回--%>
+                <%--</button>--%>
 
             </div>
 
@@ -61,16 +61,6 @@
                     <%--<input name="orgId" type="hidden" id="orgId"/>--%>
                     <input name="oldPhone" type="hidden" id="oldPhone"/>
                     <div class="form-group">
-                        <label class="control-label col-sm-2 no-padding-right" for="userName">小区*</label>
-                        <div class="col-sm-6">
-                            <div class="clearfix">
-                                <select  name="orgId" id="orgSelect"
-                                         class="form-control">
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <label class="control-label col-sm-2 no-padding-right" for="userName">姓名*</label>
                         <div class="col-sm-6">
                             <div class="clearfix">
@@ -80,14 +70,6 @@
                     </div>
                     <div class="form-group">
                         <label class="control-label col-sm-2 no-padding-right" for="userName">性别</label>
-                        <%--<div class="col-sm-6">--%>
-                            <%--<div class="clearfix">--%>
-                                <%--<select class="form-control"   name="sex" id="sex" style="width: 100%;float: left;" >--%>
-                                    <%--<option value="男">男</option>--%>
-                                    <%--<option value="女">女</option>--%>
-                                <%--</select>--%>
-                            <%--</div>--%>
-                        <%--</div>--%>
                         <div class="col-sm-6">
                             <div class="clearfix">
                                 <label id="newsInfoTitle" class="control-label" style="font-style: italic;"></label>
@@ -110,6 +92,14 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label class="control-label col-sm-2 no-padding-right" for="userName">身份证号*</label>
+                        <div class="col-sm-6">
+                            <div class="clearfix">
+                                <input type="text" name="psd" id="psd" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label class="control-label col-sm-2 no-padding-right" for="userName">电话*</label>
                         <div class="col-sm-6">
                             <div class="clearfix">
@@ -122,14 +112,6 @@
                         <div class="col-sm-6">
                             <div class="clearfix">
                                 <input type="text" name="phonet" id="phonet" class="form-control" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-2 no-padding-right" for="userName">身份证号*</label>
-                        <div class="col-sm-6">
-                            <div class="clearfix">
-                                <input type="text" name="psd" id="psd" class="form-control" />
                             </div>
                         </div>
                     </div>
@@ -162,30 +144,6 @@
                         <div class="col-sm-6">
                             <div class="clearfix">
                                 <input type="text" name="zzmm" id="zzmm" class="form-control" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-2 no-padding-right" for="passWord">专有部分座落</label>
-                        <div class="col-sm-6">
-                            <div class="clearfix">
-                                <input type="text" name="position" id="position" class="form-control" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-2 no-padding-right" for="passWord">专有部分面积*</label>
-                        <div class="col-sm-6">
-                            <div class="clearfix">
-                                <input type="number" name="acreage" id="acreage" class="form-control" />
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-2 no-padding-right" for="userName">备注</label>
-                        <div class="col-sm-6">
-                            <div class="clearfix">
-                                <input type="text" name="remark" id="remark" class="form-control" />
                             </div>
                         </div>
                     </div>
@@ -273,7 +231,7 @@
             {name:'psd',hidden:true,width:1,align:'center'},
             {name:'orgId',hidden:true,width:1,align:'center'},
             {name:'remark',hidden:true,width:1,align:'center'},
-            {name:'name', sortable:false,width:2,align:'center'},
+            {name:'name', sortable:false,width:1,align:'center'},
             {name:'sex',sortable:false,width:1,align:'center'},
             {name:'phone',sortable:false,width:1},
             {name:'job',sortable:false,width:1,align:'center'},
@@ -302,7 +260,7 @@
     });
     $("#jsonmap").jqGrid('navGrid','#pjmap',{edit:false,add:false,del:false,search:false});
     function formaterOpretion(cellvalue, options, rowdata) {
-        var a =  '<a href="javascript:void(0)" title="编辑" onclick="editUI('+rowdata.id+');" class="tab_a"><i class="ace-icon glyphicon glyphicon-edit"></i></a>&nbsp;&nbsp;'+'<a href="javascript:void(0)"  title="删除" onclick="deleteUI('+rowdata.id+');" class="tab_a"><i class="ace-icon glyphicon glyphicon-trash"></i></a>'
+        var a =  '<a href="javascript:void(0)" title="编辑" onclick="editUI('+rowdata.id+');" class="tab_a"><i class="ace-icon glyphicon glyphicon-edit"></i></a>&nbsp;&nbsp;'+'<a href="javascript:void(0)"  title="删除" onclick="deleteUI('+rowdata.id+');" class="tab_a"><i class="ace-icon glyphicon glyphicon-trash"></i></a>&nbsp;&nbsp;'+'<a href="javascript:void(0)"  title="专有部落设置" onclick="deleteUI('+rowdata.id+');" class="tab_a"><i class="fa fa-building"></i></a>';
         return a;
     }
 

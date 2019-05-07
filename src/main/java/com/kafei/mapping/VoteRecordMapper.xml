@@ -112,6 +112,80 @@
 
     <select id="selectVoteRecordList" parameterType="java.lang.Integer" resultType="voteRecordBo">
         SELECT
+            b.`name`,
+            b.img,
+            b.id,
+            count(
+
+                    IF(c.choice = '同意', 1, NULL)
+            ) AS countAgreen,
+            count(
+
+                    IF(c.choice = '反对', 1, NULL)
+            ) AS countReject,
+            count(
+
+                    IF(c.choice = '弃权', 1, NULL)
+            ) AS countGiveUp,
+            sum(
+
+                    IF(
+                            c.choice = '同意',
+                            a.acreage,
+                            NULL
+                    )
+            ) AS sumAgreen,
+            sum(
+
+                    IF(
+                            c.choice = '反对',
+                            a.acreage,
+                            NULL
+                    )
+            ) AS sumReject,
+            sum(
+
+                    IF(
+                            c.choice = '弃权',
+                            a.acreage,
+                            NULL
+                    )
+            ) AS sumGiveUp
+
+        FROM
+            (
+                SELECT
+                    sum(a.acreage) AS acreage,
+                    c.id           AS voteId,
+                    a.user_id      AS userId
+                FROM
+                    o_owner_org a,
+                    o_vote c
+                WHERE
+                    c.id = #{voteId}
+                    AND a.org_id IN (
+                        SELECT id
+                        FROM
+                            o_org
+                        WHERE
+                            id = c.org_id
+                            OR p_id = c.org_id
+                    )
+                GROUP BY
+                    a.user_id
+            ) a,
+            o_candidate b,
+            o_vote_record c
+        WHERE
+            b.id = c.ca_id
+            AND a.userId = c.user_id
+            AND c.vote_id = a.voteId
+        GROUP BY
+            b.id
+    </select>
+
+    <select id="selectVoteRecordListNoPage" parameterType="java.lang.Integer" resultType="voteRecordBo">
+        SELECT
             a.`name`,
             a.img,
             count(
@@ -160,69 +234,18 @@
             AND b.vote_id = #{voteId}
         GROUP BY
             b.ca_id
-    </select>
-
-    <select id="selectVoteRecordListNoPage" parameterType="java.lang.Integer" resultType="voteRecordBo">
-        SELECT
-        a.`name`,
-        a.img,
-        count(
-
-        IF(b.choice = '同意', 1, NULL)
-        ) AS countAgreen,
-        count(
-
-        IF(b.choice = '反对', 1, NULL)
-        ) AS countReject,
-        count(
-
-        IF(b.choice = '弃权', 1, NULL)
-        ) AS countGiveUp,
-        sum(
-
-        IF(
-        b.choice = '同意',
-        c.acreage,
-        NULL
-        )
-        ) AS sumAgreen,
-        sum(
-
-        IF(
-        b.choice = '反对',
-        c.acreage,
-        NULL
-        )
-        ) AS sumReject,
-        sum(
-
-        IF(
-        b.choice = '弃权',
-        c.acreage,
-        NULL
-        )
-        ) AS sumGiveUp
-        FROM
-        o_candidate a,
-        o_vote_record b,
-        o_owner c
-        WHERE
-        a.id = b.ca_id
-        AND b.user_id = c.id
-        AND b.vote_id = #{voteId}
-        GROUP BY
-        b.ca_id
         ORDER BY countAgreen DESC
     </select>
 
     <insert id="insertBatch" parameterType="java.util.List">
         <foreach collection="list" item="item" separator=";">
-            INSERT  INTO o_vote_record(user_id,choice,vote_id,ca_id) VALUE (#{item.userId},#{item.choice},#{item.voteId},#{item.caId})
+            INSERT INTO o_vote_record(user_id,choice,vote_id,ca_id) VALUE
+            (#{item.userId},#{item.choice},#{item.voteId},#{item.caId})
         </foreach>
     </insert>
 
     <select id="sumAcreageByUserIds" parameterType="java.util.List" resultType="java.lang.Double">
-        SELECT  sum(acreage) from o_owner WHERE id IN
+        SELECT sum(acreage) from o_owner WHERE id IN
         <foreach collection="list" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>

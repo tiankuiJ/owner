@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ManagerServiceImpl implements ManagerService {
@@ -44,6 +45,21 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     public int deleteByPrimaryKey(Integer id) {
         return managerMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public int updateOwnerOrg(Owner owner) {
+        return ownerMapper.updateOwnerOrg(owner);
+    }
+
+    @Override
+    public int insertOwnerOrg(Owner owner) {
+        return ownerMapper.insertOwnerOrg(owner);
+    }
+
+    @Override
+    public int deleteOwnerOrg(Integer id) {
+        return ownerMapper.deleteOwnerOrg(id);
     }
 
     @Override
@@ -260,6 +276,11 @@ public class ManagerServiceImpl implements ManagerService {
             transactionManager.rollback(status);
             return null;
         }
+    }
+
+    @Override
+    public List<Map<String, Object>> selectOwnerOrgList(Owner owner) {
+        return ownerMapper.selectOwnerOrgList(owner);
     }
 
     private static String getCellValueToString(Cell cell) {

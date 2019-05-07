@@ -106,53 +106,77 @@
 
     <select id="selectList" parameterType="regRecord" resultType="regRecord">
         SELECT
-        a.user_id AS userId,
-        a.info_id AS infoId,
-        a.op_id AS opId,
-        b.phone AS ownerPhone,
-        b.acreage,
-        a.id,
-        a.choice,
-        a.create_time AS createTime,
-        b.name AS ownerName
-        FROM o_reg_record a, o_owner b WHERE a.user_id = b.id
-        <if test="infoId!=null">
-            AND a.info_id = #{infoId}
-        </if>
-        <if test="opId!=null">
-            AND a.op_id = #{opId}
-        </if>
-
-        <if test="userId!=null">
-            and b.id=#{userId}
-        </if>
-        <if test="searchStr!=null">
-            and concat(b.name, b.phone) like concat('%',#{searchStr},'%')
-        </if>
+            a.userId,
+            a.opId,
+            a.ownerPhone,
+            a.acreage,
+            b.id,
+            b.choice,
+            b.create_time AS createTime,
+            a.ownerName
+        FROM
+            (
+                SELECT
+                    sum(a.acreage) AS acreage,
+                    b.NAME         AS ownerName,
+                    b.id           AS userId,
+                    c.id           AS opId,
+                    b.phone        AS ownerPhone
+                FROM
+                    o_owner_org a,
+                    o_owner b,
+                    o_op_info c
+                WHERE
+                    a.user_id = b.id
+                    AND c.id = #{opId}
+                    AND a.org_id IN (
+                        SELECT id
+                        FROM
+                            o_org
+                        WHERE
+                            id = c.org_id
+                            OR p_id = c.org_id
+                    )
+                GROUP BY
+                    a.user_id
+            ) a
+            LEFT JOIN o_reg_record b ON b.op_id = a.opId
+        WHERE
+            a.userId = b.user_id
     </select>
 
     <select id="selectSumAcreageByInfo" parameterType="java.lang.Integer" resultType="java.lang.Double">
-        SELECT sum(b.acreage) AS sum
-        FROM o_reg_record a, o_owner b
-        WHERE a.user_id = b.id
+        SELECT
+        sum(c.acreage) AS sum
+        FROM
+        o_reg_record a,
+        o_owner b,
+        o_owner_org c,
+        o_op_info d
+        WHERE
+        a.op_id = d.id AND
+        a.user_id = b.id AND b.id = c.user_id
         <if test="infoId!=null">
             AND a.info_id = #{infoId}
         </if>
         <if test="opId!=null">
             AND a.op_id = #{opId}
         </if>
+        AND c.org_id in (SELECT id from o_org WHERE id=d.org_id OR p_id=d.org_id)
     </select>
 
     <select id="selectAcreageBiaoJue" parameterType="regRecord" resultType="regRecord">
         SELECT
-        SUM(b.acreage) AS acreage,
+        SUM(c.acreage) AS acreage,
         a.choice AS choice
         FROM
         o_reg_record a,
-        o_owner b
+        o_owner b,
+        o_owner_org c,
+        o_op_info d
         WHERE
-
-        a.user_id = b.id
+        a.op_id = d.id and
+        a.user_id = b.id AND b.id = c.user_id AND c.org_id in (SELECT id from o_org WHERE id=d.org_id OR p_id=d.org_id)
         <if test="infoId!=null">
             AND a.info_id = #{infoId}
         </if>
@@ -165,14 +189,14 @@
 
     <select id="selectBioaJueUserCount" parameterType="regRecord" resultType="biaojueUserCountBo">
         SELECT
-            count(if(a.choice='同意',1,null)) AS agreenUserCount,
-            count(if(a.choice='反对',1,null)) AS rejectUserCount,
-            count(if(a.choice='弃权',1,null)) AS giveUpUserCount,
-            count(id) AS userCount
+            count(if(a.choice = '同意', 1, NULL)) AS agreenUserCount,
+            count(if(a.choice = '反对', 1, NULL)) AS rejectUserCount,
+            count(if(a.choice = '弃权', 1, NULL)) AS giveUpUserCount,
+            count(id)                           AS userCount
         FROM
             o_reg_record a
         WHERE
-            a.op_id=#{opId}
+            a.op_id = #{opId}
 
     </select>
 

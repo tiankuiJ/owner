@@ -21,6 +21,11 @@
                 class="menu-icon fa fa-caret-right"></i>业主管理
         </a> <b class="arrow"></b></li>
 
+        <li class=""><a href="javascript:void(0)"
+                        nav-menu="机构设置,专有部分管理,/ownerOrgListUI.action"> <i
+                class="menu-icon fa fa-caret-right"></i>专有部分管理
+        </a> <b class="arrow"></b></li>
+
     </ul>
 </li>
 

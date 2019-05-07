@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 
 public interface OwnerMapper {
@@ -12,6 +13,14 @@ public interface OwnerMapper {
 
     @Select("select id from o_owner where phone=#{phone}")
     Integer selectByPhone(String phone);
+
+
+    List<Map<String,Object>> selectOwnerOrgList(Owner owner);
+
+    int updateOwnerOrg(Owner owner);
+    int insertOwnerOrg(Owner owner);
+
+    int deleteOwnerOrg(Integer id);
 
     int insertSelective(Owner record);
 

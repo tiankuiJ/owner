@@ -6,6 +6,7 @@ import com.kafei.vo.Owner;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2017/12/15.
@@ -14,6 +15,11 @@ public interface ManagerService {
 
     int deleteByPrimaryKey(Integer id);
 
+    int updateOwnerOrg(Owner owner);
+
+    int insertOwnerOrg(Owner owner);
+
+    int deleteOwnerOrg(Integer id);
 
     int insertSelective(Manager record);
 
@@ -31,4 +37,6 @@ public interface ManagerService {
     int updateOwner(Owner owner);
 
     JSONObject importOwner(InputStream in, String fileName,Integer orgId);
+
+    List<Map<String,Object>> selectOwnerOrgList(Owner owner);
 }

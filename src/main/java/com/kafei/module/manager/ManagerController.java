@@ -56,6 +56,11 @@ public class ManagerController {
         return "org/managerList";
     }
 
+    @RequestMapping("ownerOrgListUI")
+    public String ownerOrgListUI() {
+        return "org/ownerOrgList";
+    }
+
     @RequestMapping("ownerListUI")
     public String ownerListUI() {
         return "org/ownerList";
@@ -89,6 +94,27 @@ public class ManagerController {
         return PageUtil.getResult(page);
     }
 
+    /**
+     * 查询业主和小区对应信息
+     * @param pager
+     * @param owner
+     * @param request
+     * @return
+     */
+    @RequestMapping("selectOwnerOrgList")
+    @ResponseBody
+    public Object selectOwnerOrgList(Pager pager, Owner owner, HttpServletRequest request) {
+        Manager manager = SessionUtil.getManagerSession(request);
+        if(manager.getOrgType()!=null && manager.getOrgType().equals("社区")){
+            owner.setChildOrg(manager.getChildOrg());
+        }else if(manager.getOrgType()!=null && manager.getOrgType().equals("小区")){
+            owner.setOrgId(manager.getOrgId());
+        }
+        Page<Object> page = PageHelper.startPage(pager.getPage(), pager.getRows(), pager.getSidx() + " " + pager.getSord());
+        service.selectOwnerOrgList(owner);
+        return PageUtil.getResult(page);
+    }
+
     @RequestMapping("addManager")
     @ResponseBody
     public AjaxResult addManager(Manager manager) {
@@ -117,11 +143,31 @@ public class ManagerController {
         return result == -1 ? AjaxResult.newInstance().doFail("添加失败，该电话已存在") : result > 0 ? AjaxResult.newInstance().doSuccess("添加成功") : AjaxResult.newInstance().doFail("添加失败");
     }
 
+    @RequestMapping("addOwnerOrg")
+    @ResponseBody
+    public AjaxResult addOwnerOrg(Owner owner) {
+        int result = service.insertOwnerOrg(owner);
+        return result > 0 ? AjaxResult.newInstance().doSuccess("添加成功") : AjaxResult.newInstance().doFail("添加失败");
+    }
+
     @RequestMapping("updateOwner")
     @ResponseBody
     public AjaxResult updateOwner(Owner owner) {
         int result = service.updateOwner(owner);
         return result == -1 ? AjaxResult.newInstance().doFail("修改失败，该电话已存在") : result > 0 ? AjaxResult.newInstance().doSuccess("修改成功") : AjaxResult.newInstance().doFail("修改失败");
+    }
+
+    @RequestMapping("updateOwnerOrg")
+    @ResponseBody
+    public AjaxResult updateOwnerOrg(Owner owner) {
+        int result = service.updateOwnerOrg(owner);
+        return result > 0 ? AjaxResult.newInstance().doSuccess("修改成功") : AjaxResult.newInstance().doFail("修改失败");
+    }
+    @RequestMapping("deleteOwnerOrg")
+    @ResponseBody
+    public AjaxResult deleteOwnerOrg(Integer id) {
+        int result = service.deleteOwnerOrg(id);
+        return result > 0 ? AjaxResult.newInstance().doSuccess("删除成功") : AjaxResult.newInstance().doFail("删除失败");
     }
 
 
