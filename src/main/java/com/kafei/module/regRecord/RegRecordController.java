@@ -3,6 +3,7 @@ package com.kafei.module.regRecord;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.kafei.mapper.RegRecordMapper;
+import com.kafei.mapper.VoteMapper;
 import com.kafei.mapper.VoteRecordMapper;
 import com.kafei.module.regRecord.service.RegRecordService;
 import com.kafei.util.AjaxResult;
@@ -10,6 +11,7 @@ import com.kafei.util.PageUtil;
 import com.kafei.util.Pager;
 import com.kafei.vo.RegRecord;
 import com.kafei.vo.RegRecordKey;
+import com.kafei.vo.Vote;
 import com.kafei.vo.VoteRecordBo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +74,8 @@ public class RegRecordController {
         List<RegRecord> result = mapper.selectAcreageBiaoJue(regRecord);
         return AjaxResult.newInstance().doSuccess("查询成功",result);
     }
-
+@Autowired
+private VoteMapper voteMapper;
     @RequestMapping("resultUI")
     public String resulUI(Integer voteId, Model model){
         List<VoteRecordBo> optionList = service.selectVoteRecordList(voteId);
@@ -80,7 +84,11 @@ public class RegRecordController {
         if(list.size()==0){
             model.addAttribute("joinSumAcreage",0);
         }else{
-            Double result = voteRecordMapper.sumAcreageByUserIds(list);
+            Vote vote = voteMapper.selectByPrimaryKey(voteId);
+            Map<String,Object> map = new HashMap<>();
+            map.put("list",list);
+            map.put("orgId",vote.getOrgId());
+            Double result = voteRecordMapper.sumAcreageByUserIdsAndOrgId(map);
             model.addAttribute("joinSumAcreage",result);
         }
         return "activity/voteResult";

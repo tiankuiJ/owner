@@ -438,7 +438,7 @@
                     });
                 }
             },
-            error: function (returndata) {
+            error: function () {
                 $('button').removeAttr("disabled");
                 layer.msg('服务器未响应,请稍后再试',{icon:2});
             }

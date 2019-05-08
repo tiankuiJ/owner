@@ -41,7 +41,7 @@
         DELETE FROM o_owner
         WHERE phone = #{phone,jdbcType=BIGINT}
     </delete>
-    <insert id="insertSelective" parameterType="com.kafei.vo.Owner">
+    <insert id="insertSelective" parameterType="com.kafei.vo.Owner" useGeneratedKeys="true" keyProperty="id">
         insert into o_owner
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="phone != null">
@@ -238,11 +238,13 @@
         WHERE id = #{id}
     </update>
     <insert id="insertOwnerOrg" parameterType="owner">
-        insert INTO o_owner_org(user_id,org_id,position,acreage,remark) VALUES (#{id},#{orgId},#{position},#{acreage},#{remark})
+        INSERT INTO o_owner_org (user_id, org_id, position, acreage, remark)
+        VALUES (#{id}, #{orgId}, #{position}, #{acreage}, #{remark})
     </insert>
 
     <delete id="deleteOwnerOrg" parameterType="INTEGER">
-        DELETE from o_owner_org WHERE  id=#{id}
+        DELETE FROM o_owner_org
+        WHERE id = #{id}
     </delete>
 
     <select id="selectList" parameterType="owner" resultMap="BaseResultMap">
@@ -256,6 +258,7 @@
         a.job,
         a.zzmm,
         a.whcd,
+        a.psd,
         GROUP_CONCAT(b.position) AS position,
         sum(b.acreage) AS acreage,
         GROUP_CONCAT(b.remark) AS remark
@@ -292,10 +295,10 @@
         from o_owner where phone=#{phone} and psd=#{psd} AND deleted!=1
     </select>
 
-    <insert id="insertBatch" parameterType="java.util.List">
-        <foreach collection="list" separator=";" item="o">
-            INSERT INTO o_owner(name,sex,psd,phone,job,birth,whcd,zzmm,position,acreage,org_id,phonet,remark) VALUES
-            (#{o.name},#{o.sex},#{o.psd},#{o.phone},#{o.job},#{o.birth},#{o.whcd},#{o.zzmm},#{o.position},#{o.acreage},#{o.orgId},#{o.phonet},#{o.remark})
+    <insert id="insertOwnerOrgBatch" parameterType="java.util.List" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO o_owner_org(user_id,org_id,acreage,remark,position) VALUES
+        <foreach collection="list" separator="," item="o">
+                (#{o.id},#{o.orgId},#{o.acreage},#{o.remark},#{o.position})
         </foreach>
     </insert>
 

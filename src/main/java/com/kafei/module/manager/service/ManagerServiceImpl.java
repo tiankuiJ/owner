@@ -29,10 +29,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ManagerServiceImpl implements ManagerService {
@@ -153,8 +150,10 @@ public class ManagerServiceImpl implements ManagerService {
         }
         return wb;
     }
+
     @Autowired
     private DataSourceTransactionManager transactionManager;
+
     @Override
 //    @Transactional
     public JSONObject importOwner(InputStream in, String fileName, Integer orgId) {
@@ -164,7 +163,10 @@ public class ManagerServiceImpl implements ManagerService {
         JSONObject result = new JSONObject();
         List<Object> list = null;
         List<ErrorObj> errors = new ArrayList<>();
-        String[] attrs = new String[]{"position", "name", "phone", "phonet", "acreage","psd", "remark"};
+
+        List<Owner> notHaveIdownerList = new ArrayList<>();
+
+//        String[] attrs = new String[]{"position", "name", "phone", "phonet", "acreage", "psd", "remark"};
 
         //创建Excel工作薄
         try {
@@ -181,91 +183,101 @@ public class ManagerServiceImpl implements ManagerService {
                 if (sheet == null) {
                     continue;
                 }
-
                 //遍历当前sheet中的所有行
-                System.out.println(sheet.getLastRowNum()+"!!");
                 for (int j = sheet.getFirstRowNum() + 1; j < sheet.getLastRowNum() + 1; j++) {
                     row = sheet.getRow(j);
                     if (row == null || row.getFirstCellNum() == j) {
-                        System.out.println(j+"???");
                         continue;
                     }
 
-                    JSONObject ownerObj = new JSONObject();
-                    ownerObj.put("orgId", orgId);
+
+                    Owner owner = new Owner();
+
+                    Owner notHaveIdowner = new Owner();
+                    notHaveIdowner.setOrgId(orgId);
+                    String oldPas="";
                     //遍历所有的列
                     for (int y = row.getFirstCellNum(); y < row.getLastCellNum(); y++) {
                         cell = row.getCell(y);
-//                        if(cell==null){
-//                            System.out.println(sheet.getSheetName()+j+"|"+y);
-//                            break;
-//                        }
-                        Owner owner;
-                        if (StringUtils.isBlank(getCellValueToString(cell)) && y!=3 && y!=6 ) {
+                        if (StringUtils.isBlank(getCellValueToString(cell)) && y != 3 && y != 6) {
                             ErrorObj errorObj = new ErrorObj();
-                            errorObj.setErrorRowIndex((sheet.getSheetName()+"|"+(j+1) + ""));
-                            errorObj.setErrorContent("请填入完整的信息");
+                            errorObj.setErrorRowIndex((sheet.getSheetName() + "|" + (j + 1) + ""));
+                            errorObj.setErrorContent("请填入完整的信息,专有部分座落、业主姓名、手机号码、专有部分面积总和、身份证号码为必填字段");
                             errors.add(errorObj);
                             break;
                         }
-                        if (cell.getColumnIndex() == 2) {
+
+                        if (y == 0) {
+                            notHaveIdowner.setPosition(getCellValueToString(cell));
+                        }
+
+                        if (y == 1) {
+                            owner.setName(getCellValueToString(cell));
+                        }
+                        if (y == 4) {
                             try {
-                                owner = new Owner(Long.parseLong(getCellValueToString(row.getCell(y))));
-                                if (ownerMapper.selectList(owner).size() > 0) {
-                                    ErrorObj errorObj = new ErrorObj();
-                                    errorObj.setErrorRowIndex((sheet.getSheetName()+"|"+(j+1) + ""));
-                                    errorObj.setErrorContent("手机号重复");
-                                    errors.add(errorObj);
-                                    break;
-                                }
-                                owner.setPhone(null);
-                                owner.setPsd(getCellValueToString(row.getCell(5)));
-                                if (StringUtils.isBlank(owner.getPsd())) {
-                                    ErrorObj errorObj = new ErrorObj();
-                                    errorObj.setErrorRowIndex((sheet.getSheetName()+"|"+(j+1) + ""));
-                                    errorObj.setErrorContent("身份证号码不能为空");
-                                    errors.add(errorObj);
-                                    break;
-                                }
-                                if (ownerMapper.selectList(owner).size() > 0) {
-                                    ErrorObj errorObj = new ErrorObj();
-                                    errorObj.setErrorRowIndex((sheet.getSheetName()+"|"+(j+1) + ""));
-                                    errorObj.setErrorContent("身份证号码重复");
-                                    errors.add(errorObj);
-                                    break;
-                                }
+                                double acreage = Double.parseDouble(getCellValueToString(cell));
+                                notHaveIdowner.setAcreage(acreage);
                             } catch (Exception e) {
                                 ErrorObj errorObj = new ErrorObj();
-                                errorObj.setErrorRowIndex((sheet.getSheetName()+"|"+(j+1) + ""));
-                                errorObj.setErrorContent("手机号格式错误");
-                                errors.add(errorObj);
-                                break;
-                            }
-                            try {
-                                Double.parseDouble(getCellValueToString(row.getCell(4)));
-                            } catch (Exception e) {
-                                ErrorObj errorObj = new ErrorObj();
-                                errorObj.setErrorRowIndex((sheet.getSheetName()+"|"+(j+1) + ""));
+                                errorObj.setErrorRowIndex((sheet.getSheetName() + "|" + (j + 1) + ""));
                                 errorObj.setErrorContent("面积格式错误");
                                 errors.add(errorObj);
                                 break;
                             }
+
                         }
-                        ownerObj.put(attrs[y], getCellValueToString(cell));
+                        if (y == 2) {
+                            try {
+                                notHaveIdowner.setPhone(Long.parseLong(getCellValueToString(row.getCell(y))));
+                                owner.setPhone(Long.parseLong(getCellValueToString(row.getCell(y))));
+                                List<Owner> tempList = ownerMapper.selectList(owner);
+                                if(tempList.size()>0){
+                                    oldPas = tempList.get(0).getPsd();
+                                    owner.setId(tempList.get(0).getId());
+                                }
+                            } catch (Exception e) {
+                                ErrorObj errorObj = new ErrorObj();
+                                errorObj.setErrorRowIndex((sheet.getSheetName() + "|" + (j + 1) + ""));
+                                errorObj.setErrorContent("手机号格式错误");
+                                errors.add(errorObj);
+                                break;
+                            }
+                        }
+                        if (y == 5) {
+                            System.out.println(oldPas+"|"+(getCellValueToString(cell)));
+                            if(StringUtils.isNotBlank(oldPas) && !oldPas.equals((getCellValueToString(cell)))){
+                                ErrorObj errorObj = new ErrorObj();
+                                errorObj.setErrorRowIndex((sheet.getSheetName() + "|" + (j + 1) + ""));
+                                errorObj.setErrorContent("已经存在相同的电话号码但是身份证号码不一致，请检查");
+                                errors.add(errorObj);
+                                break;
+                            }
+                            owner.setPsd((getCellValueToString(cell)));
+                        }
                         if (cell.getColumnIndex() == 6) {
-                            list.add(ownerObj);
+                            if(owner.getId()==null){
+                                ownerMapper.insertSelective(owner);
+                            }
+                            notHaveIdowner.setId(owner.getId());
+                            notHaveIdowner.setRemark(getCellValueToString(cell));
+                            if(ownerMapper.checkOwnerOrg(notHaveIdowner.getOrgId(),notHaveIdowner.getPosition(),notHaveIdowner.getId())!=0){
+                                ErrorObj errorObj = new ErrorObj();
+                                errorObj.setErrorRowIndex((sheet.getSheetName() + "|" + (j + 1) + ""));
+                                errorObj.setErrorContent("当前业主在该小区已经添加相同位置的专有部分座落");
+                                errors.add(errorObj);
+                                break;
+                            }
+                            notHaveIdownerList.add(notHaveIdowner);
+
                         }
                     }
-
                 }
             }
             result.put("owners", list);
-            System.out.println(JSON.toJSONString(list));
             result.put("errors", errors);
             if (result.get("errors").toString().length() < 3) {
-                ArrayList<Owner> records = JSON.parseObject(result.get("owners").toString(), new TypeReference<ArrayList<Owner>>() {
-                });
-                ownerMapper.insertBatch(records);
+                ownerMapper.insertOwnerOrgBatch(notHaveIdownerList);
                 transactionManager.commit(status);
             } else {
                 transactionManager.rollback(status);

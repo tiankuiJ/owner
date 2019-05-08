@@ -6,6 +6,7 @@ import com.kafei.vo.VoteRecordKey;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 
 public interface VoteRecordMapper {
     int deleteByPrimaryKey(VoteRecordKey key);
@@ -34,4 +35,6 @@ public interface VoteRecordMapper {
     List<Long> selectVoreRecordUser(Integer voteId);
 
     Double sumAcreageByUserIds(List<Long> list);
+
+    Double sumAcreageByUserIdsAndOrgId(Map<String,Object> map);
 }

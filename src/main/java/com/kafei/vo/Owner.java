@@ -201,4 +201,13 @@ public class Owner extends SearchVo{
 
     public Owner() {
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Owner){
+            Owner owner = (Owner) obj;
+            return this.getPhone().toString().trim().equals(owner.getPhone().toString().trim());
+        }
+        return false;
+    }
 }
