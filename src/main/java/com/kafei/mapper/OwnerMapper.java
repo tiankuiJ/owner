@@ -41,5 +41,7 @@ public interface OwnerMapper {
     String selectOrgTypeById(Integer id);
     @Select("select count(id) from o_owner_org where org_id=#{orgId} and position=#{position} and user_id=#{userId}")
     int checkOwnerOrg(@Param("orgId") Integer orgId,@Param("position") String position,@Param("userId") Integer userId);
+    @Select("select distinct org_id from o_owner_org where user_id=#{userId}")
+    List<Integer> selectAllOrgIdByUserId(@Param("userId") Integer userId);
 
 }

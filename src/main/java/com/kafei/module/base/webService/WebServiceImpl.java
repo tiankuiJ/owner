@@ -162,18 +162,26 @@ public class WebServiceImpl implements WebService{
         OpInfo opInfo = opInfoMapper.selectByPrimaryKey(opId);
         String userId = regRecord.getUserId();
         Org org = orgMapper.selectByPrimaryKey(opInfo.getOrgId());
-        Integer userOrgId = ownerMapper.selectById(Integer.parseInt(userId)).getOrgId();
-        if(org.getType().equals("小区")){
-            if(!org.getId().equals(userOrgId)){
-                return -2;
-            }
-        }else{
-            List<Integer> ids = orgMapper.selectIdsByPid(org.getId());
-            if(!ids.contains(userOrgId)){
-                return -2;
-            }
+        if(!checkRegPermission(org,Integer.parseInt(userId))){
+            return -2;
         }
         return regRecordMapper.insertSelective(regRecord);
+    }
+
+
+    private boolean checkRegPermission(Org org,Integer userId){
+        List<Integer> allOrgIds = ownerMapper.selectAllOrgIdByUserId((userId));
+        if(org.getType().equals("小区")){
+            return allOrgIds.contains(org.getId());
+        }else{
+            List<Integer> ids = orgMapper.selectIdsByPid(org.getId());
+            for (int i = 0; i < ids.size(); i++) {
+                if(allOrgIds.contains(ids.get(i))){
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     @Override
@@ -189,18 +197,9 @@ public class WebServiceImpl implements WebService{
         Integer opId = regRecord.get(0).getOpId();
         OpInfo opInfo = opInfoMapper.selectByPrimaryKey(opId);
         Org org = orgMapper.selectByPrimaryKey(opInfo.getOrgId());
-        Integer userOrgId = ownerMapper.selectById(userId).getOrgId();
-        if(org.getType().equals("小区")){
-            if(!org.getId().equals(userOrgId)){
-                return -2;
-            }
-        }else{
-            List<Integer> ids = orgMapper.selectIdsByPid(org.getId());
-            if(!ids.contains(userOrgId)){
-                return -2;
-            }
+        if(!checkRegPermission(org,userId)){
+            return -2;
         }
-
         for(RegRecord record:regRecord){
             regRecordMapper.insertSelective(record);
         }
@@ -219,7 +218,7 @@ public class WebServiceImpl implements WebService{
     }
 
     @Override
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional(isolation = Isolation.SERIALIZABLE,rollbackFor = Exception.class)
     public int regVote(List<VoteRecord> records,String phone) {
 
 
@@ -232,16 +231,8 @@ public class WebServiceImpl implements WebService{
         Integer opId = records.get(0).getVoteId();
         Vote opInfo = voteMapper.selectByPrimaryKey(opId);
         Org org = orgMapper.selectByPrimaryKey(opInfo.getOrgId());
-        Integer userOrgId = ownerMapper.selectById(ownerId).getOrgId();
-        if(org.getType().equals("小区")){
-            if(!org.getId().equals(userOrgId)){
-                return -2;
-            }
-        }else{
-            List<Integer> ids = orgMapper.selectIdsByPid(org.getId());
-            if(!ids.contains(userOrgId)){
-                return -2;
-            }
+        if(!checkRegPermission(org,ownerId)){
+            return -2;
         }
 
 
