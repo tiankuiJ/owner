@@ -70,11 +70,13 @@ public class AESUtil {
 //		System.out.println(AESUtil.getInstance().encrypt("123455"));
 //		String a = "http://localhost:8080/files/EC3DFDCB4E361.jpg";
 //		System.out.println(a.lastIndexOf("/")+1);//获取到文件名称);
-		Double d = 1.0;
-		Double d1 = 0.9;
-		String str = Double.toString(0.1000000000000000055511151231257827021181583404541015625);
-//		System.out.println((new BigDecimal(d.toString()).subtract(new BigDecimal(d1.toString()))).doubleValue());
-		System.out.println(new BigDecimal(
-				str).toString());// 0.1
+//		Double d = 1.0;
+//		Double d1 = 0.9;
+//		String str = Double.toString(0.1000000000000000055511151231257827021181583404541015625);
+////		System.out.println((new BigDecimal(d.toString()).subtract(new BigDecimal(d1.toString()))).doubleValue());
+//		System.out.println(new BigDecimal(
+//				str).toString());// 0.1
+		String str = null;
+		System.out.println(str);
 	}
 }

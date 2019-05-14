@@ -24,6 +24,7 @@ public class OrgServiceImpl implements OrgService{
 
     @Override
     public int falseDelete(Integer id) {
+        mapper.deleteOwnerOrgByOwner(id);
         return mapper.falseDelete(id);
     }
 

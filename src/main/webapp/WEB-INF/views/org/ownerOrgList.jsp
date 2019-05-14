@@ -262,7 +262,7 @@
         layer.confirm('是否删除该信息？', {icon: 1, title: '删除提示'}, function (index, layero) {
             $.ajax({
                 type: "POST",
-                url: sys.rootPath + "/adminOrg/falseDelete.action",
+                url: sys.rootPath + "/deleteOwnerOrg.action",
                 data: {
                     id: id
                 },
