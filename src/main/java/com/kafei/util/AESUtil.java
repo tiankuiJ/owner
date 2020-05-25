@@ -66,7 +66,7 @@ public class AESUtil {
 	}
 
 	public static void main(String[] args) throws Exception {
-//		System.out.println(AESUtil.getInstance().decrypt("/o4Xso1dtVGZM0/BFv2jPg=="));
+		System.out.println(AESUtil.getInstance().decrypt("H3CPHYGYNHb62CjoN9l3Pg=="));
 //		System.out.println(AESUtil.getInstance().encrypt("123455"));
 //		String a = "http://localhost:8080/files/EC3DFDCB4E361.jpg";
 //		System.out.println(a.lastIndexOf("/")+1);//获取到文件名称);
@@ -76,7 +76,5 @@ public class AESUtil {
 ////		System.out.println((new BigDecimal(d.toString()).subtract(new BigDecimal(d1.toString()))).doubleValue());
 //		System.out.println(new BigDecimal(
 //				str).toString());// 0.1
-		String str = null;
-		System.out.println(str);
 	}
 }

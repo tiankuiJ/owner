@@ -43,9 +43,10 @@ public class WebServiceImpl implements WebService{
     public Owner login(Owner owner, HttpServletRequest request) {
         if(owner.getPsd()==null)
             return null;
+        System.out.println(JSON.toJSONString(owner));
         if((owner = ownerMapper.webLogin(owner))!=null){
-            Org org = orgMapper.selectByPrimaryKey(owner.getOrgId());
-            owner.setOrgPId(org.getId());
+//            Org org = orgMapper.selectByPrimaryKey(owner.getOrgId());
+//            owner.setOrgPId(org.getId());
             WebUtils.setSessionAttribute(request,"ownerSession",owner);
             return owner;
         }

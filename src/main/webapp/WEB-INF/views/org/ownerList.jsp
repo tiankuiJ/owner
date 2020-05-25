@@ -409,6 +409,10 @@
 
 
     function submitImportForm() {
+        if(!($("#excelFile").val())){
+            layer.msg('请选择文件',{icon:2});
+            return;
+        }
         if (orgId == 0) {
             layer.msg("请选择小区再导入", {icon: 5});
             return "";
