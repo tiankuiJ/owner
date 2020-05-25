@@ -31,15 +31,15 @@ public class WebController {
     @RequestMapping("webLogin")
     @ResponseBody
     public AjaxResult webLogin(Owner owner, HttpServletRequest request,String code) {
-        if (request.getSession().getAttribute("lastCode") == null) {
-            return AjaxResult.newInstance().doFail("验证码错误");
-        }
-        int tempRegCodeInt = (Integer) request.getSession().getAttribute("lastCode");
-        String tempRegCode = String.valueOf(tempRegCodeInt);
-        if (StringUtils.isEmpty(code.trim())
-                || !code.trim().equals(tempRegCode)) {
-            return AjaxResult.newInstance().doFail("验证码错误");
-        }
+//        if (request.getSession().getAttribute("lastCode") == null) {
+//            return AjaxResult.newInstance().doFail("验证码错误");
+//        }
+//        int tempRegCodeInt = (Integer) request.getSession().getAttribute("lastCode");
+//        String tempRegCode = String.valueOf(tempRegCodeInt);
+//        if (StringUtils.isEmpty(code.trim())
+//                || !code.trim().equals(tempRegCode)) {
+//            return AjaxResult.newInstance().doFail("验证码错误");
+//        }
         Owner result = service.login(owner, request);
         if (result != null)
             return AjaxResult.newInstance().doSuccess("登录成功");
